@@ -4,11 +4,13 @@ create table "user"
     id serial
         constraint user_pk
             primary key,
-    username varchar(255) not null,
-    password varchar(255) not null,
-    first_name varchar(65),
-    last_name varchar(65),
-    unique(username)
+    first_name varchar(255),
+    last_name  varchar(255),
+    password   varchar(255) not null,
+    username   varchar(255) not null,
+    email      varchar(255) not null,
+    unique(username),
+    unique(email)
 );
 
 
@@ -18,7 +20,7 @@ create table role
     id serial
         constraint role_pk
             primary key,
-    role_name varchar(100) not null
+    name varchar(255) not null
 );
 
 
@@ -41,7 +43,7 @@ create table product
     id serial
         constraint product_pk
             primary key,
-    product_name varchar(65) not null
+    product_name varchar(255) not null
 );
 
 
@@ -51,7 +53,7 @@ create table category
     id serial
         constraint category_pk
             primary key,
-    category_name varchar(65) not null,
+    category_name varchar(255) not null,
     description text
 );
 
@@ -74,7 +76,7 @@ create table store
     id serial
         constraint store_pk
             primary key,
-    store_name varchar(65) not null
+    store_name varchar(255) not null
 );
 
 

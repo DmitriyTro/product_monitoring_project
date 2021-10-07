@@ -1,20 +1,25 @@
 package com.springboot.product_monitoring.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "user", schema = "public")
+@RequiredArgsConstructor
+@Entity
+@Table(name = "user")
 public class User {
 
 	@Id
@@ -22,25 +27,46 @@ public class User {
 	@Column(name = "id")
 	private int id;
 
+	@NotBlank
+	@Size(max = 20)
 	@Column(name = "username")
 	private String username;
 
+	@NotBlank
+	@Size(max = 255)
 	@Column(name = "password")
 	private String password;
 
+	@Size(max = 25)
 	@Column(name = "first_name")
 	private String firstName;
 
+	@Size(max = 25)
 	@Column(name = "last_name")
 	private String lastName;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,
-			CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@Email
+	@NotBlank
+	@Size(max = 30)
+	@Column(name = "email")
+	private String email;
+
+	@ManyToMany(
+			fetch = FetchType.EAGER,
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "user_role",
 			joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
 	@ToString.Exclude
 	private Set<Role> roles = new HashSet<>();
+
+	public User(String username, String password, String firstName, String lastName, String email) {
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+	}
 
 	@Override
 	public boolean equals(Object o) {

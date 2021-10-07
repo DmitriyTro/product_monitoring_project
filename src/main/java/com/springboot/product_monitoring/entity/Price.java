@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "price", schema = "public")
+@Table(name = "price")
 public class Price {
 
 	@Id
@@ -21,12 +21,12 @@ public class Price {
 	@Column(name = "date")
 	private LocalDateTime date;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "product_id")
 	@ToString.Exclude
 	private Product product;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "store_id")
 	@ToString.Exclude
 	private Store store;

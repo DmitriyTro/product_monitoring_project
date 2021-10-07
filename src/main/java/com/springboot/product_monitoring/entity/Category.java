@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "category", schema = "public")
+@Table(name = "category")
 public class Category {
 
 	@Id
@@ -22,8 +22,7 @@ public class Category {
 	@Column(name = "description")
 	private String description;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,
-			CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "category_product",
 			joinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})

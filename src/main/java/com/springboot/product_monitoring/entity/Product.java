@@ -3,11 +3,12 @@ package com.springboot.product_monitoring.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-@Table(name = "product", schema = "public")
+@Table(name = "product")
 public class Product {
 
 	@Id
@@ -19,7 +20,7 @@ public class Product {
 	private String productName;
 
 	@ManyToMany(mappedBy = "products", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,
-			CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+			CascadeType.MERGE})
 	@ToString.Exclude
-	private List<Category> categories;
+	private List<Category> categories = new ArrayList<>();
 }
