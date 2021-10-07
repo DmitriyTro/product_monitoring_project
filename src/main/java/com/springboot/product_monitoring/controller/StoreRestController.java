@@ -7,12 +7,14 @@ import com.springboot.product_monitoring.mappers.StoreMapper;
 import com.springboot.product_monitoring.payload.response.MessageResponse;
 import com.springboot.product_monitoring.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @StoresCustomExceptionHandler
@@ -46,9 +48,9 @@ public class StoreRestController {
 
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping(value = "/stores/list")
-	public ResponseEntity<List<StoreDTO>> findAllStores() {
-		List<Store> stores = storeService.findAllStores();
-		return new ResponseEntity<>(storeMapper.toDTOList(stores), HttpStatus.OK);
+	public Page<Store> findAllStores(
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
+		return storeService.findAllStores(pageable);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")

@@ -7,9 +7,10 @@ import com.springboot.product_monitoring.repository.StoreRepository;
 import com.springboot.product_monitoring.service.StoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -51,8 +52,8 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public List<Store> findAllStores() {
-		List<Store> result = storeRepository.findAll();
+	public Page<Store> findAllStores(Pageable pageable) {
+		Page<Store> result = storeRepository.findAll(pageable);
 
 		if (result.isEmpty()) {
 			log.warn("IN method findAllStores - no stores found");
@@ -60,7 +61,7 @@ public class StoreServiceImpl implements StoreService {
 
 		}
 
-		log.info("IN method findAllStores - {} stores found", result.size());
+		log.info("IN method findAllStores - {} stores found", result.getTotalElements());
 		return result;
 	}
 

@@ -7,9 +7,10 @@ import com.springboot.product_monitoring.repository.UserRepository;
 import com.springboot.product_monitoring.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -51,8 +52,8 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<User> findAllUsers() {
-		List<User> result = userRepository.findAll();
+	public Page<User> findAllUsers(Pageable pageable) {
+		Page<User> result = userRepository.findAll(pageable);
 
 		if (result.isEmpty()) {
 			log.warn("IN method findAllUsers - no users found");
@@ -60,7 +61,7 @@ public class AdminServiceImpl implements AdminService {
 
 		}
 
-		log.info("IN method findAllUsers - {} users found", result.size());
+		log.info("IN method findAllUsers - {} users found", result.getTotalElements());
 		return result;
 	}
 
