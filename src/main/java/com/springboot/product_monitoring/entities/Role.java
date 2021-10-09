@@ -1,6 +1,6 @@
 package com.springboot.product_monitoring.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -18,12 +18,12 @@ public class Role {
 	@Column(name = "id")
 	private int id;
 
-	@JsonProperty("role type")
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role_type")
 	private ERole roleType;
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "roles")
 	@ToString.Exclude
-	public Set<User> users = new HashSet<>();
+	private Set<User> users = new HashSet<>();
 }

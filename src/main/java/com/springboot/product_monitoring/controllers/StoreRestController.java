@@ -1,9 +1,9 @@
 package com.springboot.product_monitoring.controllers;
 
 import com.springboot.product_monitoring.dto.StoreDTO;
-import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Store;
 import com.springboot.product_monitoring.exceptions.store.StoreCustomExceptionHandler;
+import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @StoreCustomExceptionHandler
@@ -45,20 +43,20 @@ public class StoreRestController {
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping(value = "/stores/list")
 	public Page<StoreDTO> findAllStores(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
 		return storeService.findAllStores(pageable);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/stores/delete/{id}")
-	public ResponseEntity<MessageResponse> deleteById(@PathVariable(name = "id") int id) {
+	public ResponseEntity deleteById(@PathVariable(name = "id") int id) {
 		storeService.deleteById(id);
 		return ResponseEntity.ok(new MessageResponse("Store deleted successfully!"));
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/stores/save")
-	public ResponseEntity<StoreDTO> saveStore(@Valid @RequestBody Store store) {
+	public ResponseEntity<StoreDTO> saveStore(@RequestBody Store store) {
 		return new ResponseEntity<>(storeService.saveStore(store), HttpStatus.CREATED);
 	}
 }

@@ -1,7 +1,6 @@
 package com.springboot.product_monitoring.entities;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -24,7 +23,8 @@ public class Product {
 	@Column(name = "product_name")
 	private String productName;
 
-	@ManyToMany(mappedBy = "products")
+	@ManyToMany(mappedBy = "products", cascade = {CascadeType.PERSIST,
+			CascadeType.MERGE})
 	@ToString.Exclude
 	private List<Category> categories = new ArrayList<>();
 }

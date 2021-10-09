@@ -1,11 +1,11 @@
 package com.springboot.product_monitoring.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -17,13 +17,14 @@ public class Price {
 	@Column(name = "id")
 	private int id;
 
+	@NotBlank
 	@Column(name = "unit_price")
 	private int unitPrice;
 
+	@NotBlank
 	@Column(name = "date")
-	private Timestamp date;
+	private LocalDateTime date;
 
-	@JsonIgnoreProperties("categories")
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	@ToString.Exclude
@@ -33,14 +34,4 @@ public class Price {
 	@JoinColumn(name = "store_id")
 	@ToString.Exclude
 	private Store store;
-
-	public Price() {
-	}
-
-	public Price(int unitPrice, Timestamp date, Product product, Store store) {
-		this.unitPrice = unitPrice;
-		this.date = date;
-		this.product = product;
-		this.store = store;
-	}
 }

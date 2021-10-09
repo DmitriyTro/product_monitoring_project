@@ -67,9 +67,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
-
-//	@Override
-//	public void configure(WebSecurity web) {
-//		web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
-//	}
 }

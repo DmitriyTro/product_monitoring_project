@@ -1,7 +1,6 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.StoreDTO;
-import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Store;
 import com.springboot.product_monitoring.exceptions.errors.StoreErrorType;
 import com.springboot.product_monitoring.exceptions.store.StoreException;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -33,20 +31,20 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public StoreDTO findStoreById(int id) {
-		Optional<Store> result = storeRepository.findById(id);
+		Store result = storeRepository.findById(id).orElse(null);
 
-		if (result.isEmpty()) {
+		if (result == null) {
 			log.warn("IN method findStoreById - no store found by id: {}", id);
 			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND.getDescription(), id));
 		}
 
 		log.info("IN method findStoreById - store found by id: {}", id);
-		return storeMapper.toStoreDTO(result.get());
+		return storeMapper.toStoreDTO(result);
 	}
 
 	@Override
 	public StoreDTO findByStoreName(String storeName) {
-		Store result = storeRepository.findByStoreName(storeName);
+		Store result = storeRepository.findByStoreName(storeName).orElse(null);
 
 		if (result == null) {
 			log.warn("IN method findByStoreName - no store found by store name: {}", storeName);
@@ -73,17 +71,16 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public MessageResponse deleteById(int id) {
-		Optional<Store> result = storeRepository.findById(id);
+	public void deleteById(int id) {
+		Store result = storeRepository.findById(id).orElse(null);
 
-		if (result.isEmpty()) {
+		if (result == null) {
 			log.warn("IN method deleteById - no store found by id: {}", id);
 			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND.getDescription(), id));
 		}
 
 		log.info("IN method deleteById store with id: {} successfully deleted", id);
 		storeRepository.deleteById(id);
-		return new MessageResponse("Store deleted successfully!");
 	}
 
 	@Override

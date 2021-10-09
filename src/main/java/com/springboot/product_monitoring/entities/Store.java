@@ -1,6 +1,6 @@
 package com.springboot.product_monitoring.entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

@@ -4,11 +4,11 @@ create table "user"
     id serial
         constraint user_pk
             primary key,
-    first_name varchar(255),
-    last_name  varchar(255),
+    first_name varchar(25),
+    last_name  varchar(25),
     password   varchar(255) not null,
-    username   varchar(255) not null,
-    email      varchar(255) not null,
+    username   varchar(20) not null,
+    email      varchar(30) not null,
     unique(username),
     unique(email)
 );
@@ -20,7 +20,7 @@ create table role
     id serial
         constraint role_pk
             primary key,
-    name varchar(255) not null
+    role_type varchar(20) not null
 );
 
 
@@ -29,10 +29,10 @@ create table user_role
 (
     user_id integer not null
         constraint user_role_user_id_fk
-            references "user",
+            references "user" on update cascade,
     role_id integer not null
         constraint user_role_role_id_fk
-            references "role",
+            references "role" on update cascade,
     unique (user_id, role_id)
 );
 
@@ -43,7 +43,7 @@ create table product
     id serial
         constraint product_pk
             primary key,
-    product_name varchar(255) not null
+    product_name varchar(30) not null
 );
 
 
@@ -53,8 +53,8 @@ create table category
     id serial
         constraint category_pk
             primary key,
-    category_name varchar(255) not null,
-    description text
+    category_name varchar(30) not null,
+    description varchar(100)
 );
 
 
@@ -63,10 +63,10 @@ create table category_product
 (
     category_id integer not null
         constraint product_category_category_id_fk
-            references category,
+            references category on update cascade on delete cascade,
     product_id integer not null
         constraint product_category_product_id_fk
-            references product
+            references product on update cascade
 );
 
 
@@ -76,7 +76,7 @@ create table store
     id serial
         constraint store_pk
             primary key,
-    store_name varchar(255) not null
+    store_name varchar(100) not null
 );
 
 
@@ -90,8 +90,8 @@ create table price
     date timestamp,
     product_id integer not null
         constraint price_product_id_fk
-            references product,
+            references product on update cascade,
     store_id integer not null
         constraint price_store_id_fk
-            references store
+            references store on update cascade
 );

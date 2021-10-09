@@ -1,7 +1,6 @@
 package com.springboot.product_monitoring.services;
 
 import com.springboot.product_monitoring.dto.ProductDTO;
-import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +13,7 @@ public interface ProductService {
 
 	Page<ProductDTO> findAllProducts(Pageable pageable);
 
-	MessageResponse deleteById(int id);
+	void deleteById(int id);
 
-	ProductDTO saveProductWithCategory(Product product);
+	ProductDTO saveProduct(Product product);
 }
