@@ -54,7 +54,8 @@ create table category
         constraint category_pk
             primary key,
     category_name varchar(30) not null,
-    description varchar(100)
+    description varchar(100),
+    unique (category_name)
 );
 
 
@@ -62,10 +63,10 @@ create table category
 create table category_product
 (
     category_id integer not null
-        constraint product_category_category_id_fk
+        constraint category_product_category_id_fk
             references category on update cascade on delete cascade,
     product_id integer not null
-        constraint product_category_product_id_fk
+        constraint category_product_product_id_fk
             references product on update cascade
 );
 
@@ -86,8 +87,8 @@ create table price
     id serial
         constraint price_pk
             primary key,
-    unit_price integer,
-    date timestamp,
+    unit_price integer not null,
+    date timestamp not null,
     product_id integer not null
         constraint price_product_id_fk
             references product on update cascade,

@@ -1,6 +1,8 @@
 package com.springboot.product_monitoring.entities;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -23,8 +25,14 @@ public class Product {
 	@Column(name = "product_name")
 	private String productName;
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "products", cascade = {CascadeType.PERSIST,
 			CascadeType.MERGE})
 	@ToString.Exclude
-	private List<Category> categories = new ArrayList<>();
+	public List<Category> categories = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	@ToString.Exclude
+	public List<Price> prices = new ArrayList<>();
 }

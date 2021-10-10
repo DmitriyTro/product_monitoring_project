@@ -1,5 +1,6 @@
 package com.springboot.product_monitoring.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class User {
 	@Column(name = "username")
 	private String username;
 
+	@JsonIgnore
 	@NotBlank
 	@Size(max = 255)
 	@Column(name = "password")
@@ -56,7 +58,7 @@ public class User {
 			joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
 	@ToString.Exclude
-	private Set<Role> roles = new HashSet<>();
+	public Set<Role> roles = new HashSet<>();
 
 	public User(String username, String password, String firstName, String lastName, String email) {
 		this.username = username;

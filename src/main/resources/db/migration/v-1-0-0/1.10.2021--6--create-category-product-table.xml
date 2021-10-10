@@ -12,32 +12,17 @@
 
     <changeSet id="0.1.11" author="DmitriiTrofimov">
         <createTable tableName="category_product">
+
             <column name="category_id" type="int">
-                <constraints nullable="false"/>
+                <constraints nullable="false" foreignKeyName="category_product_category_id_fk"
+                             referencedTableName="category" referencedColumnNames="id" deleteCascade="true"/>
             </column>
-
             <column name="product_id" type="int">
-                <constraints nullable="false"/>
+                <constraints nullable="false" foreignKeyName="category_product_product_id_fk"
+                             referencedTableName="product" referencedColumnNames="id" deleteCascade="false"/>
             </column>
+
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="category_product"
-                                 baseColumnNames="category_id"
-                                 constraintName="category_product_category_id_fk"
-                                 referencedTableName="category"
-                                 referencedColumnNames="id"
-                                 onDelete="NO ACTION"
-                                 onUpdate="CASCADE"/>
-
-        <addForeignKeyConstraint baseTableName="category_product"
-                                 baseColumnNames="product_id"
-                                 constraintName="category_product_product_id_fk"
-                                 referencedTableName="product"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"
-                                 onUpdate="CASCADE"/>
-
-        <addUniqueConstraint tableName="category_product" columnNames="category_id, product_id"/>
     </changeSet>
 
 </databaseChangeLog>

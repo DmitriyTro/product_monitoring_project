@@ -1,10 +1,14 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.ProductDTO;
+import com.springboot.product_monitoring.entities.Category;
 import com.springboot.product_monitoring.entities.Product;
+import com.springboot.product_monitoring.exceptions.category.CategoryException;
+import com.springboot.product_monitoring.exceptions.errors.CategoryErrorType;
 import com.springboot.product_monitoring.exceptions.errors.ProductErrorType;
 import com.springboot.product_monitoring.exceptions.product.ProductException;
 import com.springboot.product_monitoring.mappers.ProductMapper;
+import com.springboot.product_monitoring.repositories.CategoryRepository;
 import com.springboot.product_monitoring.repositories.ProductRepository;
 import com.springboot.product_monitoring.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +25,13 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
 	private final ProductRepository productRepository;
+	private final CategoryRepository categoryRepository;
 	private final ProductMapper productMapper;
 
 	@Autowired
-	public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+	public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper) {
 		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
 		this.productMapper = productMapper;
 	}
 
@@ -92,6 +98,23 @@ public class ProductServiceImpl implements ProductService {
 			log.warn("IN method saveProduct - product by product name: {} already exists", product.getProductName());
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_ALREADY_EXISTS.getDescription(),
 					product.getProductName()));
+		}
+	}
+
+	@Override
+	public ProductDTO saveProductWithCategory(Product product, String categoryName) {
+		Category categoryInDB = categoryRepository.findByCategoryName(categoryName).orElse(null);
+
+		if (categoryInDB == null) {
+			log.warn("IN method saveProductWithCategory - category by category name: {} not found", categoryName);
+			throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_CATEGORY_NAME_NOT_FOUND
+					.getDescription(), categoryName));
+		} else {
+			log.info("IN method saveProductWithCategory - product: {} with category: {} saved successfully",
+					product.getProductName(), categoryName);
+
+			categoryInDB.products.add(product);
+			return productMapper.toProductDTO(productRepository.save(product));
 		}
 	}
 }

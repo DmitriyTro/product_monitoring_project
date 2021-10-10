@@ -13,9 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @UserCustomExceptionHandler
@@ -45,19 +44,19 @@ public class AdminRestController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users/list")
 	public Page<UserDTO> findAllUsers(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
 		return adminService.findAllUsers(pageable);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/users/update")
-	public ResponseEntity<UserDTO> update(@Valid @RequestBody User user) {
-		return new ResponseEntity<>(adminService.update(user), HttpStatus.OK);
+	public ResponseEntity<UserDTO> updateUser(@Validated @RequestBody User user) {
+		return new ResponseEntity<>(adminService.updateUser(user), HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/users/delete/{id}")
-	public ResponseEntity<MessageResponse> deleteById(@PathVariable(name = "id") int id) {
+	public ResponseEntity deleteById(@PathVariable(name = "id") int id) {
 		adminService.deleteById(id);
 		return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
 	}

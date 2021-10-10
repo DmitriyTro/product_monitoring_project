@@ -1,9 +1,9 @@
 package com.springboot.product_monitoring.controllers;
 
 import com.springboot.product_monitoring.dto.StoreDTO;
+import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Store;
 import com.springboot.product_monitoring.exceptions.store.StoreCustomExceptionHandler;
-import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.services.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -56,7 +57,7 @@ public class StoreRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/stores/save")
-	public ResponseEntity<StoreDTO> saveStore(@RequestBody Store store) {
+	public ResponseEntity<StoreDTO> saveStore(@Validated @RequestBody Store store) {
 		return new ResponseEntity<>(storeService.saveStore(store), HttpStatus.CREATED);
 	}
 }

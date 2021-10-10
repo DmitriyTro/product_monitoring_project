@@ -1,19 +1,16 @@
 package com.springboot.product_monitoring.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StoreDTO {
 
-	@NotBlank
+	@JsonProperty("store id")
 	private int id;
 
-	@NotBlank
-	@Size(max = 100)
+	@JsonProperty("store name")
 	private String storeName;
 }

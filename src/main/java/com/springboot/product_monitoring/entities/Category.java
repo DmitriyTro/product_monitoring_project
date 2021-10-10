@@ -29,5 +29,5 @@ public class Category {
 			joinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
 	@ToString.Exclude
-	private List<Product> products = new ArrayList<>();
+	public List<Product> products = new ArrayList<>();
 }

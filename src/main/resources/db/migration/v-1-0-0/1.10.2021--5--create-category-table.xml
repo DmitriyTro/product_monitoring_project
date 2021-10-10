@@ -13,15 +13,15 @@
     <changeSet id="0.1.9" author="DmitriiTrofimov">
         <createTable tableName="category">
 
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
             </column>
-
             <column name="category_name" type="varchar(30)">
                 <constraints nullable="false" unique="true"/>
             </column>
-        </createTable>
+            <column name="description" type="varchar(100)"/>
 
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

@@ -4,8 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -17,21 +16,19 @@ public class Price {
 	@Column(name = "id")
 	private int id;
 
-	@NotBlank
 	@Column(name = "unit_price")
 	private int unitPrice;
 
-	@NotBlank
 	@Column(name = "date")
-	private LocalDateTime date;
+	private Timestamp date;
 
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	@ToString.Exclude
-	private Product product;
+	private Product product = new Product();
 
 	@ManyToOne
 	@JoinColumn(name = "store_id")
 	@ToString.Exclude
-	private Store store;
+	private Store store = new Store();
 }

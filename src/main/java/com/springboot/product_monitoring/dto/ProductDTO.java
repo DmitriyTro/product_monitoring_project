@@ -1,23 +1,16 @@
 package com.springboot.product_monitoring.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.springboot.product_monitoring.entities.Category;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDTO {
 
-	@NotBlank
+	@JsonProperty("product id")
 	private int id;
 
-	@NotBlank
-	@Size(max = 30)
+	@JsonProperty("product name")
 	private String productName;
-
-	private List<Category> categories;
 }

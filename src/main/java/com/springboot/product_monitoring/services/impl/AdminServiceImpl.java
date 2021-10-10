@@ -1,12 +1,8 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.UserDTO;
-import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
-import com.springboot.product_monitoring.entities.Role;
 import com.springboot.product_monitoring.entities.User;
-import com.springboot.product_monitoring.exceptions.errors.RoleErrorType;
 import com.springboot.product_monitoring.exceptions.errors.UserErrorType;
-import com.springboot.product_monitoring.exceptions.role.RoleException;
 import com.springboot.product_monitoring.exceptions.user.UserException;
 import com.springboot.product_monitoring.mappers.UserMapper;
 import com.springboot.product_monitoring.repositories.RoleRepository;
@@ -21,9 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,10 +28,7 @@ public class AdminServiceImpl implements AdminService {
 	private final RoleRepository roleRepository;
 
 	@Autowired
-	public AdminServiceImpl(UserRepository userRepository,
-	                        UserMapper userMapper,
-	                        PasswordEncoder encoder,
-	                        RoleRepository roleRepository) {
+	public AdminServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder encoder, RoleRepository roleRepository) {
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
 		this.encoder = encoder;
@@ -47,7 +37,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public UserDTO findUserById(int id) {
-		User result = userRepository.findUserById(id);
+		User result = userRepository.findById(id).orElse(null);
 
 		if (result == null) {
 			log.warn("IN method findUserById - no user found by id: {}", id);
@@ -60,16 +50,16 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public UserDTO findUserByUsername(String username) {
-		Optional<User> result = userRepository.findByUsername(username);
+		User result = userRepository.findByUsername(username).orElse(null);
 
-		if (result.isEmpty()) {
+		if (result == null) {
 			log.warn("IN method findUserByUsername - no user found by user name: {}", username);
 			throw new UserException(String.format(UserErrorType.USER_BY_USERNAME_NOT_FOUND
 					.getDescription(), username));
 		}
 
 		log.info("IN method findByStoreName - user: {} found by user name: {}", result, username);
-		return userMapper.toUserDTO(result.get());
+		return userMapper.toUserDTO(result);
 	}
 
 	@Override
@@ -87,44 +77,37 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public UserDTO update(User user) {
-		User userInDB = userRepository.findUserById(user.getId());
-
+	public UserDTO updateUser(User user) {
+		User userInDB = userRepository.findById(user.getId()).orElse(null);
+//		if (roleFromDB == null) {
+//			log.warn("IN method updateUser - no role found by id: {}", id);
+//			throw new RoleException(String.format(RoleErrorType.ROLE_BY_ID_NOT_FOUND.getDescription(), id));
 		if (userInDB == null) {
-			log.warn("IN method update - no user found by user name: {}", user.getUsername());
+			log.warn("IN method updateUser - no user found by user name: {}", user.getUsername());
 			throw new UserException(String.format(UserErrorType.USER_BY_USERNAME_NOT_FOUND
 					.getDescription(), user.getUsername()));
+		} else {
+			userInDB.setUsername(user.getUsername());
+			userInDB.setPassword(encoder.encode(user.getPassword()));
+			userInDB.setFirstName(user.getFirstName());
+			userInDB.setLastName(user.getLastName());
+			userInDB.setEmail(user.getEmail());
+
+			log.info("IN method updateUser - user by id: {} updated successfully", user.getId());
+			return userMapper.toUserDTO(userRepository.save(userInDB));
 		}
-
-		Set<Role> roles = user.getRoles().stream().map(r -> {
-			Role userRole = roleRepository.findById(r.getId()).orElseThrow(() ->
-					new RoleException(String.format(RoleErrorType.ROLE_BY_ID_NOT_FOUND.getDescription(), r.getId())));
-			userRole.getUsers().add(userInDB);
-			return userRole;
-		}).collect(Collectors.toSet());
-
-		userInDB.setUsername(user.getUsername());
-		userInDB.setFirstName(user.getFirstName());
-		userInDB.setLastName(user.getLastName());
-		userInDB.setPassword(encoder.encode(user.getPassword()));
-		userInDB.setEmail(user.getEmail());
-		userInDB.setRoles(roles);
-
-		log.info("IN method update - user with id: {} updated successfully", userInDB.getId());
-		return userMapper.toUserDTO(userRepository.save(userInDB));
 	}
 
 	@Override
-	public MessageResponse deleteById(int id) {
-		Optional<User> result = userRepository.findById(id);
+	public void deleteById(int id) {
+		User result = userRepository.findById(id).orElse(null);
 
-		if (result.isEmpty()) {
+		if (result == null) {
 			log.warn("IN method deleteById - no user found by id: {}", id);
 			throw new UserException(String.format(UserErrorType.USER_BY_ID_NOT_FOUND.getDescription(), id));
 		}
 
 		log.info("IN method deleteById user with id: {} successfully deleted", id);
 		userRepository.deleteById(id);
-		return new MessageResponse("User deleted successfully!");
 	}
 }

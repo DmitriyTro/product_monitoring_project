@@ -1,10 +1,14 @@
 package com.springboot.product_monitoring.entities;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,4 +24,9 @@ public class Store {
 	@Size(max = 100)
 	@Column(name = "store_name")
 	private String storeName;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "store")
+	@ToString.Exclude
+	public List<Price> prices = new ArrayList<>();
 }

@@ -3,6 +3,7 @@ package com.springboot.product_monitoring.controllers;
 import com.springboot.product_monitoring.dto.ProductDTO;
 import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Product;
+import com.springboot.product_monitoring.exceptions.category.CategoryCustomExceptionHandler;
 import com.springboot.product_monitoring.exceptions.product.ProductCustomExceptionHandler;
 import com.springboot.product_monitoring.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @ProductCustomExceptionHandler
+@CategoryCustomExceptionHandler
 @RestController
 @RequestMapping("/api/auth")
 public class ProductRestController {
@@ -56,7 +59,14 @@ public class ProductRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/products/save")
-	public ResponseEntity<ProductDTO> saveProduct(@RequestBody Product product) {
+	public ResponseEntity<ProductDTO> saveProduct(@Validated @RequestBody Product product) {
 		return new ResponseEntity<>(productService.saveProduct(product), HttpStatus.CREATED);
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping(value = "/products/save/{categoryName}")
+	public ResponseEntity<ProductDTO> saveProductWithCategory(
+			@Validated @RequestBody Product product, @PathVariable(name = "categoryName") String categoryName) {
+		return new ResponseEntity<>(productService.saveProductWithCategory(product, categoryName), HttpStatus.OK);
 	}
 }
