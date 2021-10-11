@@ -14,8 +14,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @CategoryCustomExceptionHandler
@@ -59,7 +60,7 @@ public class CategoryRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/categories/save")
-	public ResponseEntity<CategoryDTO> saveCategory(@Validated @RequestBody Category category) {
+	public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody Category category) {
 		return new ResponseEntity<>(categoryService.saveCategory(category), HttpStatus.CREATED);
 	}
 

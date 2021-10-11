@@ -14,8 +14,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @ProductCustomExceptionHandler
@@ -59,14 +60,14 @@ public class ProductRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/products/save")
-	public ResponseEntity<ProductDTO> saveProduct(@Validated @RequestBody Product product) {
+	public ResponseEntity<ProductDTO> saveProduct(@Valid @RequestBody Product product) {
 		return new ResponseEntity<>(productService.saveProduct(product), HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/products/save/{categoryName}")
 	public ResponseEntity<ProductDTO> saveProductWithCategory(
-			@Validated @RequestBody Product product, @PathVariable(name = "categoryName") String categoryName) {
+			@Valid @RequestBody Product product, @PathVariable(name = "categoryName") String categoryName) {
 		return new ResponseEntity<>(productService.saveProductWithCategory(product, categoryName), HttpStatus.OK);
 	}
 }

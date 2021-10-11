@@ -103,21 +103,21 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryDTO addProductToCategory(int categoryId, int productId) {
-		Category category = categoryRepository.findById(categoryId).orElse(null);
-		if (category == null) {
+		Category categoryInDB = categoryRepository.findById(categoryId).orElse(null);
+		if (categoryInDB == null) {
 			log.warn("IN method addProductToCategory - no category found by id: {}", categoryId);
 			throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_ID_NOT_FOUND.getDescription(), categoryId));
 		}
 
-		Product product = productRepository.findById(productId).orElse(null);
-		if (product == null) {
+		Product productInDB = productRepository.findById(productId).orElse(null);
+		if (productInDB == null) {
 			log.warn("IN method addProductToCategory - no product found by id: {}", productId);
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND.getDescription(), productId));
 		}
 
 		log.info("IN method addProductToCategory - product: {} added to category: {} successfully",
-				product.getProductName(), category.getCategoryName());
-		category.products.add(product);
-		return categoryMapper.toCategoryDTO(categoryRepository.save(category));
+				productInDB.getProductName(), categoryInDB.getCategoryName());
+		categoryInDB.getProducts().add(productInDB);
+		return categoryMapper.toCategoryDTO(categoryRepository.save(categoryInDB));
 	}
 }

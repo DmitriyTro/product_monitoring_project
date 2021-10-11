@@ -13,8 +13,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @StoreCustomExceptionHandler
@@ -57,7 +58,7 @@ public class StoreRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/stores/save")
-	public ResponseEntity<StoreDTO> saveStore(@Validated @RequestBody Store store) {
+	public ResponseEntity<StoreDTO> saveStore(@Valid @RequestBody Store store) {
 		return new ResponseEntity<>(storeService.saveStore(store), HttpStatus.CREATED);
 	}
 }

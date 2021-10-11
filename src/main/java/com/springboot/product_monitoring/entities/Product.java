@@ -29,10 +29,10 @@ public class Product {
 	@ManyToMany(mappedBy = "products", cascade = {CascadeType.PERSIST,
 			CascadeType.MERGE})
 	@ToString.Exclude
-	public List<Category> categories = new ArrayList<>();
+	private List<Category> categories = new ArrayList<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	@ToString.Exclude
-	public List<Price> prices = new ArrayList<>();
+	private List<Price> prices = new ArrayList<>();
 }

@@ -28,5 +28,5 @@ public class Store {
 	@JsonIgnore
 	@OneToMany(mappedBy = "store")
 	@ToString.Exclude
-	public List<Price> prices = new ArrayList<>();
+	private List<Price> prices = new ArrayList<>();
 }

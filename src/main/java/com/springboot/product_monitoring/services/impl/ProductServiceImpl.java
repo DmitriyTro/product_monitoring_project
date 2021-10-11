@@ -112,8 +112,7 @@ public class ProductServiceImpl implements ProductService {
 		} else {
 			log.info("IN method saveProductWithCategory - product: {} with category: {} saved successfully",
 					product.getProductName(), categoryName);
-
-			categoryInDB.products.add(product);
+			categoryInDB.getProducts().add(product);
 			return productMapper.toProductDTO(productRepository.save(product));
 		}
 	}

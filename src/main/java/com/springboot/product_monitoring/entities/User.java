@@ -53,12 +53,12 @@ public class User {
 	@Column(name = "email")
 	private String email;
 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinTable(name = "user_role",
 			joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
 	@ToString.Exclude
-	public Set<Role> roles = new HashSet<>();
+	private Set<Role> roles = new HashSet<>();
 
 	public User(String username, String password, String firstName, String lastName, String email) {
 		this.username = username;

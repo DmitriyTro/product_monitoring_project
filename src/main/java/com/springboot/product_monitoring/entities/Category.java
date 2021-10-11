@@ -24,10 +24,14 @@ public class Category {
 	@Column(name = "category_name")
 	private String categoryName;
 
-	@ManyToMany
+	@Column(name = "description")
+	@Size(max = 100)
+	private String description;
+
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinTable(name = "category_product",
 			joinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")})
 	@ToString.Exclude
-	public List<Product> products = new ArrayList<>();
+	private List<Product> products = new ArrayList<>();
 }

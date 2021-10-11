@@ -78,24 +78,8 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public UserDTO updateUser(User user) {
-		User userInDB = userRepository.findById(user.getId()).orElse(null);
-//		if (roleFromDB == null) {
-//			log.warn("IN method updateUser - no role found by id: {}", id);
-//			throw new RoleException(String.format(RoleErrorType.ROLE_BY_ID_NOT_FOUND.getDescription(), id));
-		if (userInDB == null) {
-			log.warn("IN method updateUser - no user found by user name: {}", user.getUsername());
-			throw new UserException(String.format(UserErrorType.USER_BY_USERNAME_NOT_FOUND
-					.getDescription(), user.getUsername()));
-		} else {
-			userInDB.setUsername(user.getUsername());
-			userInDB.setPassword(encoder.encode(user.getPassword()));
-			userInDB.setFirstName(user.getFirstName());
-			userInDB.setLastName(user.getLastName());
-			userInDB.setEmail(user.getEmail());
-
-			log.info("IN method updateUser - user by id: {} updated successfully", user.getId());
-			return userMapper.toUserDTO(userRepository.save(userInDB));
-		}
+		log.info("IN method updateUser - user by id: {} updated successfully", user.getId());
+		return userMapper.toUserDTO(userRepository.save(user));
 	}
 
 	@Override

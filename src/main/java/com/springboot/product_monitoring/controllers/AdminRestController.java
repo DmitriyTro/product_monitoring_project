@@ -13,8 +13,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @UserCustomExceptionHandler
@@ -50,7 +51,7 @@ public class AdminRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/users/update")
-	public ResponseEntity<UserDTO> updateUser(@Validated @RequestBody User user) {
+	public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody User user) {
 		return new ResponseEntity<>(adminService.updateUser(user), HttpStatus.OK);
 	}
 

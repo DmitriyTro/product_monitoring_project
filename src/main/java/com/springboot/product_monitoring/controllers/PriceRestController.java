@@ -15,8 +15,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PriceCustomExceptionHandler
@@ -55,7 +56,7 @@ public class PriceRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/prices/save/product/{productId}/store/{storeId}")
-	public ResponseEntity<PriceDTO> savePrice(@Validated @RequestBody Price price,
+	public ResponseEntity<PriceDTO> savePrice(@Valid @RequestBody Price price,
 	                                          @PathVariable(name = "productId") int productId,
 	                                          @PathVariable(name = "storeId") int storeId) {
 		return new ResponseEntity<>(priceService.savePriceWithProductIdAndStoreId(price, productId, storeId), HttpStatus.CREATED);
