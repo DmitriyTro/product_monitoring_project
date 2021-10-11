@@ -55,10 +55,10 @@ public class PriceRestController {
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping(value = "/prices/save/product/{productId}/store/{storeId}")
+	@PostMapping(value = "/prices/save")
 	public ResponseEntity<PriceDTO> savePrice(@Valid @RequestBody Price price,
-	                                          @PathVariable(name = "productId") int productId,
-	                                          @PathVariable(name = "storeId") int storeId) {
+	                                          @RequestParam int productId,
+	                                          @RequestParam int storeId) {
 		return new ResponseEntity<>(priceService.savePriceWithProductIdAndStoreId(price, productId, storeId), HttpStatus.CREATED);
 	}
 }

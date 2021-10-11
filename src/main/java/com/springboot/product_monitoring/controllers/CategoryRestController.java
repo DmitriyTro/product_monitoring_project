@@ -65,9 +65,9 @@ public class CategoryRestController {
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping(value = "/categories/{categoryId}/products/{productId}")
+	@PutMapping(value = "/categories/save")
 	public ResponseEntity<CategoryDTO> addProductToCategory(
-			@PathVariable int categoryId, @PathVariable int productId) {
+			@RequestParam int categoryId, @RequestParam int productId) {
 		return new ResponseEntity<>(categoryService.addProductToCategory(categoryId, productId), HttpStatus.OK);
 	}
 }
