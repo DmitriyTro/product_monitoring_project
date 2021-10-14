@@ -6,8 +6,11 @@ import com.springboot.product_monitoring.entities.Product;
 import com.springboot.product_monitoring.entities.Store;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class PriceDTO {
 
 	@JsonProperty("price id")
@@ -16,7 +19,11 @@ public class PriceDTO {
 	@JsonProperty("product price")
 	private int unitPrice;
 
+	@JsonProperty("date added")
+	private Timestamp date;
+
 	@JsonProperty("product name")
+	@JsonIgnoreProperties("categories")
 	private Product product;
 
 	@JsonProperty("store name")

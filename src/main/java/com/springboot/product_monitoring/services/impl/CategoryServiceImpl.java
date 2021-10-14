@@ -2,14 +2,10 @@ package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.CategoryDTO;
 import com.springboot.product_monitoring.entities.Category;
-import com.springboot.product_monitoring.entities.Product;
 import com.springboot.product_monitoring.exceptions.category.CategoryException;
 import com.springboot.product_monitoring.exceptions.errors.CategoryErrorType;
-import com.springboot.product_monitoring.exceptions.errors.ProductErrorType;
-import com.springboot.product_monitoring.exceptions.product.ProductException;
 import com.springboot.product_monitoring.mappers.CategoryMapper;
 import com.springboot.product_monitoring.repositories.CategoryRepository;
-import com.springboot.product_monitoring.repositories.ProductRepository;
 import com.springboot.product_monitoring.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +21,11 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryRepository categoryRepository;
-	private final ProductRepository productRepository;
 	private final CategoryMapper categoryMapper;
 
 	@Autowired
-	public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, CategoryMapper categoryMapper) {
+	public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
 		this.categoryRepository = categoryRepository;
-		this.productRepository = productRepository;
 		this.categoryMapper = categoryMapper;
 	}
 
@@ -99,25 +93,5 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new CategoryException(String.format(CategoryErrorType.CATEGORY_ALREADY_EXISTS.getDescription(),
 					category.getCategoryName()));
 		}
-	}
-
-	@Override
-	public CategoryDTO addProductToCategory(int categoryId, int productId) {
-		Category categoryInDB = categoryRepository.findById(categoryId).orElse(null);
-		if (categoryInDB == null) {
-			log.warn("IN method addProductToCategory - no category found by id: {}", categoryId);
-			throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_ID_NOT_FOUND.getDescription(), categoryId));
-		}
-
-		Product productInDB = productRepository.findById(productId).orElse(null);
-		if (productInDB == null) {
-			log.warn("IN method addProductToCategory - no product found by id: {}", productId);
-			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND.getDescription(), productId));
-		}
-
-		log.info("IN method addProductToCategory - product: {} added to category: {} successfully",
-				productInDB.getProductName(), categoryInDB.getCategoryName());
-		categoryInDB.getProducts().add(productInDB);
-		return categoryMapper.toCategoryDTO(categoryRepository.save(categoryInDB));
 	}
 }

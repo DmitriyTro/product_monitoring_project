@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -84,25 +85,50 @@ public class PriceServiceImpl implements PriceService {
 
 	@Override
 	public PriceDTO savePriceWithProductIdAndStoreId(Price price, int productId, int storeId) {
-		Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
 		Product product = productRepository.findById(productId).orElse(null);
+
 		if (product == null) {
-			log.warn("IN method savePrice - no product found by id: {}", productId);
-			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND.getDescription(), productId));
+			log.warn("IN method savePriceWithProductIdAndStoreId - no product found by id: {}", productId);
+			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND
+					.getDescription(), productId));
 		}
 
 		Store store = storeRepository.findById(storeId).orElse(null);
+
 		if (store == null) {
-			log.warn("IN method savePrice - no store found by id: {}", storeId);
-			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND.getDescription(), storeId));
+			log.warn("IN method savePriceWithProductIdAndStoreId - no store found by id: {}", storeId);
+			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND
+					.getDescription(), storeId));
 		}
 
-		price.setDate(timestampNow);
-		price.setProduct(product);
-		price.setStore(store);
+		Price priceInDB = priceRepository.findById(price.getId()).orElse(new Price());
+		Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
+
+		priceInDB.setDate(timestampNow);
+		priceInDB.setUnitPrice(price.getUnitPrice());
+		priceInDB.setProduct(product);
+		priceInDB.setStore(store);
 
 		log.info("IN method savePrice - price with product by id: {} and store by id: {} saved successfully",
 				productId, storeId);
-		return priceMapper.toPriceDTO(priceRepository.save(price));
+		return priceMapper.toPriceDTO(priceRepository.save(priceInDB));
+	}
+
+	@Override
+	public Page<PriceDTO> findAllByDateBetweenAndProduct_ProductName(Date from, Date to, String productName,
+	                                                                 Pageable pageable) {
+		Page<Price> pricePage = priceRepository.findAllByDateBetweenAndProduct_ProductName(from, to, productName,
+				pageable);
+		List<PriceDTO> pricesDTOs = priceMapper.toPricesDTOs(pricePage.getContent());
+
+		if (pricePage.isEmpty()) {
+			log.warn("IN method findAllByDateBetweenAndProductName - no prices found by product name: {} " +
+							"in the date range: {} - {}",
+					productName, from, to);
+			throw new PriceException(PriceErrorType.PRICES_NOT_FOUND.getDescription());
+		}
+
+		log.info("IN method findAllByDateBetweenAndProductName - {} prices found", pricePage.getTotalElements());
+		return new PageImpl<>(pricesDTOs, pageable, pricePage.getTotalElements());
 	}
 }

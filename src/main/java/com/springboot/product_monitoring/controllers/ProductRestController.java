@@ -53,21 +53,14 @@ public class ProductRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/products/delete/{id}")
-	public ResponseEntity deleteById(@PathVariable(name = "id") int id) {
+	public ResponseEntity<MessageResponse> deleteById(@PathVariable(name = "id") int id) {
 		productService.deleteById(id);
 		return ResponseEntity.ok(new MessageResponse("Product deleted successfully!"));
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping(value = "/products/save")
-	public ResponseEntity<ProductDTO> saveProduct(@Valid @RequestBody Product product) {
-		return new ResponseEntity<>(productService.saveProduct(product), HttpStatus.CREATED);
-	}
-
-	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping(value = "/products/save/{categoryName}")
-	public ResponseEntity<ProductDTO> saveProductWithCategory(
-			@Valid @RequestBody Product product, @PathVariable(name = "categoryName") String categoryName) {
-		return new ResponseEntity<>(productService.saveProductWithCategory(product, categoryName), HttpStatus.OK);
+	@PutMapping(value = "/products/save")
+	public ResponseEntity<ProductDTO> saveProductWithCategory(@Valid @RequestBody Product product) {
+		return new ResponseEntity<>(productService.saveProductWithCategory(product), HttpStatus.OK);
 	}
 }

@@ -17,6 +17,4 @@ public interface CategoryService {
 	MessageResponse deleteById(int id);
 
 	CategoryDTO saveCategory(Category category);
-
-	CategoryDTO addProductToCategory(int categoryId, int productId);
 }

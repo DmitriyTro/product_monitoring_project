@@ -10,7 +10,7 @@
         <tagDatabase tag="changelog 0.0.0"/>
     </changeSet>
 
-    <include file="db/migration/v-1-0-0/1.10.2021--1--create-user-table-.xml"/>
+    <include file="db/migration/v-1-0-0/1.10.2021--1--create-user-table.xml"/>
     <include file="db/migration/v-1-0-0/1.10.2021--2--create-role-table.xml"/>
     <include file="db/migration/v-1-0-0/1.10.2021--3--create-user-role-table.xml"/>
     <include file="db/migration/v-1-0-0/1.10.2021--4--create-product-table.xml"/>

@@ -1,8 +1,11 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.UserDTO;
+import com.springboot.product_monitoring.entities.Role;
 import com.springboot.product_monitoring.entities.User;
+import com.springboot.product_monitoring.exceptions.errors.RoleErrorType;
 import com.springboot.product_monitoring.exceptions.errors.UserErrorType;
+import com.springboot.product_monitoring.exceptions.role.RoleException;
 import com.springboot.product_monitoring.exceptions.user.UserException;
 import com.springboot.product_monitoring.mappers.UserMapper;
 import com.springboot.product_monitoring.repositories.RoleRepository;
@@ -17,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -77,9 +81,37 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public UserDTO updateUser(User user) {
-		log.info("IN method updateUser - user by id: {} updated successfully", user.getId());
-		return userMapper.toUserDTO(userRepository.save(user));
+	public UserDTO update(User user) {
+		User userInDB = userRepository.findUserById(user.getId()).orElse(null);
+
+		if (userInDB == null) {
+			log.warn("IN method update - no user found by user name: {}", user.getUsername());
+			throw new UserException(String.format(UserErrorType.USER_BY_USERNAME_NOT_FOUND
+					.getDescription(), user.getUsername()));
+		}
+
+		userInDB.setUsername(user.getUsername());
+		userInDB.setFirstName(user.getFirstName());
+		userInDB.setLastName(user.getLastName());
+		userInDB.setPassword(encoder.encode(user.getPassword()));
+		userInDB.setEmail(user.getEmail());
+		userInDB.getRoles()
+				.addAll((user.getRoles()
+						.stream()
+						.map(role -> {
+							Role userRole = roleRepository.findById(role.getId()).orElse(null);
+							if (userRole == null) {
+								log.warn("IN method update - no role found by id: {}",
+										role.getId());
+								throw new RoleException(String.format(RoleErrorType.ROLE_BY_ID_NOT_FOUND
+												.getDescription(), role.getId()));
+							}
+							userRole.getUsers().add(userInDB);
+							return userRole;
+						})).collect(Collectors.toSet()));
+
+		log.info("IN method update - user with id: {} updated successfully", userInDB.getId());
+		return userMapper.toUserDTO(userRepository.save(userInDB));
 	}
 
 	@Override

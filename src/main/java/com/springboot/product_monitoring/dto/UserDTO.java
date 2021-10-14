@@ -19,6 +19,9 @@ public class UserDTO {
 	@JsonProperty("username")
 	private String username;
 
+	@JsonProperty("password")
+	private String password;
+
 	@JsonProperty("name")
 	private String firstName;
 
@@ -28,6 +31,7 @@ public class UserDTO {
 	@JsonProperty("e-mail")
 	private String email;
 
+	@JsonIgnoreProperties("users")
 	@JsonProperty("user roles")
 	private Set<Role> roles;
 }

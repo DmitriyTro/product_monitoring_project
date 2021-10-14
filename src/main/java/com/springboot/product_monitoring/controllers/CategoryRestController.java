@@ -4,7 +4,6 @@ import com.springboot.product_monitoring.dto.CategoryDTO;
 import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Category;
 import com.springboot.product_monitoring.exceptions.category.CategoryCustomExceptionHandler;
-import com.springboot.product_monitoring.exceptions.product.ProductCustomExceptionHandler;
 import com.springboot.product_monitoring.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @CategoryCustomExceptionHandler
-@ProductCustomExceptionHandler
 @RestController
 @RequestMapping("/api/auth")
 public class CategoryRestController {
@@ -62,12 +60,5 @@ public class CategoryRestController {
 	@PostMapping(value = "/categories/save")
 	public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody Category category) {
 		return new ResponseEntity<>(categoryService.saveCategory(category), HttpStatus.CREATED);
-	}
-
-	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping(value = "/categories/save")
-	public ResponseEntity<CategoryDTO> addProductToCategory(
-			@RequestParam int categoryId, @RequestParam int productId) {
-		return new ResponseEntity<>(categoryService.addProductToCategory(categoryId, productId), HttpStatus.OK);
 	}
 }

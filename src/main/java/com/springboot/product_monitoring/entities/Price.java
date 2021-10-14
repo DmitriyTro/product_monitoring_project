@@ -25,10 +25,10 @@ public class Price {
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	@ToString.Exclude
-	private Product product = new Product();
+	private Product product;
 
 	@ManyToOne
 	@JoinColumn(name = "store_id")
 	@ToString.Exclude
-	private Store store = new Store();
+	private Store store;
 }

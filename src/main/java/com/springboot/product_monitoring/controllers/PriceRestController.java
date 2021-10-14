@@ -12,12 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PriceCustomExceptionHandler
@@ -49,16 +51,25 @@ public class PriceRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/prices/delete/{id}")
-	public ResponseEntity deleteById(@PathVariable(name = "id") int id) {
+	public ResponseEntity<MessageResponse> deleteById(@PathVariable(name = "id") int id) {
 		priceService.deleteById(id);
 		return ResponseEntity.ok(new MessageResponse("Price deleted successfully!"));
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping(value = "/prices/save")
-	public ResponseEntity<PriceDTO> savePrice(@Valid @RequestBody Price price,
-	                                          @RequestParam int productId,
-	                                          @RequestParam int storeId) {
-		return new ResponseEntity<>(priceService.savePriceWithProductIdAndStoreId(price, productId, storeId), HttpStatus.CREATED);
+	@PutMapping(value = "/prices/save")
+	public ResponseEntity<PriceDTO> savePriceWithProductIdAndStoreId(@Valid
+	               @RequestBody Price price, @RequestParam int productId, @RequestParam int storeId) {
+		return new ResponseEntity<>(priceService.savePriceWithProductIdAndStoreId(price, productId, storeId),
+				HttpStatus.CREATED);
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping(value = "/prices/list/date")
+	public Page<PriceDTO> findAllByDateBetweenAndProduct_ProductName(@Valid
+	               @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
+	               @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date to, String productName,
+	                                                     Pageable pageable) {
+		return priceService.findAllByDateBetweenAndProduct_ProductName(from, to, productName, pageable);
 	}
 }

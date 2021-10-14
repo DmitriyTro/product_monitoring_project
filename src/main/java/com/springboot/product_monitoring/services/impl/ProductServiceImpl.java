@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -90,30 +91,27 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductDTO saveProduct(Product product) {
-		if (!productRepository.existsByProductName(product.getProductName())) {
-			log.info("IN method saveProduct - product by product name: {} saved successfully", product.getProductName());
-			return productMapper.toProductDTO(productRepository.save(product));
-		} else {
-			log.warn("IN method saveProduct - product by product name: {} already exists", product.getProductName());
-			throw new ProductException(String.format(ProductErrorType.PRODUCT_ALREADY_EXISTS.getDescription(),
-					product.getProductName()));
-		}
-	}
+	public ProductDTO saveProductWithCategory(Product product) {
+		Product productInDB = productRepository.findByProductName(product.getProductName()).orElse(new Product());
 
-	@Override
-	public ProductDTO saveProductWithCategory(Product product, String categoryName) {
-		Category categoryInDB = categoryRepository.findByCategoryName(categoryName).orElse(null);
+		productInDB.setProductName(product.getProductName());
+		productInDB.getCategories()
+				.addAll((product.getCategories()
+						.stream()
+						.map(c -> {
+							Category productCategory = categoryRepository.findById(c.getId()).orElse(null);
+							if (productCategory == null) {
+								log.warn("IN method saveProductWithCategory - no category found by id: {}",
+										c.getId());
+								throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_ID_NOT_FOUND
+										.getDescription(), c.getId()));
+							}
+							productCategory.getProducts().add(productInDB);
+							return productCategory;
+						})).collect(Collectors.toList()));
 
-		if (categoryInDB == null) {
-			log.warn("IN method saveProductWithCategory - category by category name: {} not found", categoryName);
-			throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_CATEGORY_NAME_NOT_FOUND
-					.getDescription(), categoryName));
-		} else {
-			log.info("IN method saveProductWithCategory - product: {} with category: {} saved successfully",
-					product.getProductName(), categoryName);
-			categoryInDB.getProducts().add(product);
-			return productMapper.toProductDTO(productRepository.save(product));
-		}
+		log.info("IN method saveProductWithCategory - product: {} with category: {} saved successfully",
+				product.getProductName(), productInDB.getCategories());
+		return productMapper.toProductDTO(productRepository.save(productInDB));
 	}
 }

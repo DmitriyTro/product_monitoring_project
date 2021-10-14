@@ -14,15 +14,31 @@
         <createTable tableName="user_role">
 
             <column name="user_id" type="int">
-                <constraints nullable="false" foreignKeyName="user_role_user_id_fk"
-                             referencedTableName="user" referencedColumnNames="id" deleteCascade="false"/>
-            </column>
-            <column name="role_id" type="int">
-                <constraints nullable="false" foreignKeyName="user_role_role_id_fk"
-                             referencedTableName="role" referencedColumnNames="id" deleteCascade="false"/>
+                <constraints nullable="false"/>
             </column>
 
+            <column name="role_id" type="int">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="user_role"
+                                 baseColumnNames="user_id"
+                                 constraintName="user_role_user_id_fk"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"
+                                 onDelete="NO ACTION"
+                                 onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="user_role"
+                                 baseColumnNames="role_id"
+                                 constraintName="user_role_role_id_fk"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"
+                                 onDelete="NO ACTION"
+                                 onUpdate="CASCADE"/>
+
+        <addUniqueConstraint tableName="user_role" columnNames="user_id, role_id"/>
     </changeSet>
 
 </databaseChangeLog>

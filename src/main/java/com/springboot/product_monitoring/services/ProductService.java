@@ -15,7 +15,5 @@ public interface ProductService {
 
 	void deleteById(int id);
 
-	ProductDTO saveProduct(Product product);
-
-	ProductDTO saveProductWithCategory(Product product, String categoryName);
+	ProductDTO saveProductWithCategory(Product product);
 }

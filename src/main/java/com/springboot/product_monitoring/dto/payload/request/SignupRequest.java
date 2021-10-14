@@ -11,12 +11,10 @@ import java.util.Set;
 @Data
 public class SignupRequest {
 
-	@JsonProperty("username")
 	@NotBlank
 	@Size(min = 5, max = 20)
 	private String username;
 
-	@JsonProperty("password")
 	@NotBlank
 	@Size(min = 6, max = 25)
 	private String password;

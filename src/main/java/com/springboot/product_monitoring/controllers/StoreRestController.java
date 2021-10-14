@@ -51,7 +51,7 @@ public class StoreRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/stores/delete/{id}")
-	public ResponseEntity deleteById(@PathVariable(name = "id") int id) {
+	public ResponseEntity<MessageResponse> deleteById(@PathVariable(name = "id") int id) {
 		storeService.deleteById(id);
 		return ResponseEntity.ok(new MessageResponse("Store deleted successfully!"));
 	}

@@ -1,10 +1,6 @@
 package com.springboot.product_monitoring.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -15,11 +11,12 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user")
 public class User {
 
@@ -33,7 +30,6 @@ public class User {
 	@Column(name = "username")
 	private String username;
 
-	@JsonIgnore
 	@NotBlank
 	@Size(max = 255)
 	@Column(name = "password")
@@ -53,7 +49,7 @@ public class User {
 	@Column(name = "email")
 	private String email;
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+	@ManyToMany
 	@JoinTable(name = "user_role",
 			joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})

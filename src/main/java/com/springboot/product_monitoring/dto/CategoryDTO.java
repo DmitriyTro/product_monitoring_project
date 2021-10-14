@@ -19,9 +19,7 @@ public class CategoryDTO {
 	@JsonProperty("products category")
 	private String categoryName;
 
-	@JsonProperty("description")
-	private String description;
-
+	@JsonIgnoreProperties("categories")
 	@JsonProperty("products in category")
 	private List<Product> products;
 }

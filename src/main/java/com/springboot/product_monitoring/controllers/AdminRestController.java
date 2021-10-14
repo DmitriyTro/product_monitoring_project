@@ -51,13 +51,13 @@ public class AdminRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/users/update")
-	public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody User user) {
-		return new ResponseEntity<>(adminService.updateUser(user), HttpStatus.OK);
+	public ResponseEntity<UserDTO> update(@Valid @RequestBody User user) {
+		return new ResponseEntity<>(adminService.update(user), HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/users/delete/{id}")
-	public ResponseEntity deleteById(@PathVariable(name = "id") int id) {
+	public ResponseEntity<MessageResponse> deleteById(@PathVariable(name = "id") int id) {
 		adminService.deleteById(id);
 		return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
 	}

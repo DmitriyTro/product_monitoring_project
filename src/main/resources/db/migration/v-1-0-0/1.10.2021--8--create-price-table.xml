@@ -13,25 +13,42 @@
     <changeSet id="0.1.15" author="DmitriiTrofimov">
         <createTable tableName="price">
 
-            <column name="id" type="serial">
-                <constraints primaryKey="true"/>
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
+
             <column name="unit_price" type="int">
                 <constraints nullable="false"/>
             </column>
+
             <column name="date" type="timestamp">
                 <constraints nullable="false"/>
             </column>
+
             <column name="product_id" type="int">
-                <constraints nullable="false" foreignKeyName="price_product_id_fk"
-                             referencedTableName="product" referencedColumnNames="id" deleteCascade="false"/>
-            </column>
-            <column name="store_id" type="int">
-                <constraints nullable="false" foreignKeyName="price_store_id_fk"
-                             referencedTableName="store" referencedColumnNames="id" deleteCascade="false"/>
+                <constraints nullable="false"/>
             </column>
 
+            <column name="store_id" type="int">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="price"
+                                 baseColumnNames="product_id"
+                                 constraintName="price_product_id_fk"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"
+                                 onDelete="NO ACTION"
+                                 onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="price"
+                                 baseColumnNames="store_id"
+                                 constraintName="price_store_id_fk"
+                                 referencedTableName="store"
+                                 referencedColumnNames="id"
+                                 onDelete="NO ACTION"
+                                 onUpdate="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>
