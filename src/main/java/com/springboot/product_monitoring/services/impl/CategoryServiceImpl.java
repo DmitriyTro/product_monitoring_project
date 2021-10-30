@@ -1,6 +1,7 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.CategoryDTO;
+import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Category;
 import com.springboot.product_monitoring.exceptions.category.CategoryException;
 import com.springboot.product_monitoring.exceptions.errors.CategoryErrorType;
@@ -71,7 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void deleteById(int id) {
+	public MessageResponse deleteById(int id) {
 		Category result = categoryRepository.findById(id).orElse(null);
 
 		if (result == null) {
@@ -81,6 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 		log.info("IN method deleteById category with id: {} successfully deleted", id);
 		categoryRepository.deleteById(id);
+		return new MessageResponse("Category deleted successfully!");
 	}
 
 	@Override

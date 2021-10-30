@@ -7,7 +7,6 @@ import com.springboot.product_monitoring.entities.Category;
 import com.springboot.product_monitoring.services.ProductService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -72,7 +71,6 @@ class ProductRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
-	@DisplayName("Should return product by id")
 	void findProductById() throws Exception {
 		when(productService.findProductById(anyInt())).thenReturn(oneProduct);
 
@@ -86,7 +84,6 @@ class ProductRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
-	@DisplayName("Should return product by product name")
 	void findByProductName() throws Exception {
 		when(productService.findByProductName(anyString())).thenReturn(oneProduct);
 
@@ -100,7 +97,6 @@ class ProductRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
-	@DisplayName("Should return list of products")
 	void findAllProducts() throws Exception {
 		PageRequest pageRequest =  PageRequest.of(0, 10);
 		List<ProductDTO> products = new ArrayList<>(Arrays.asList(oneProduct, twoProduct));
@@ -116,7 +112,6 @@ class ProductRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should delete product by id")
 	void deleteById() throws Exception {
 		when(productService.deleteById(twoProduct.getId())).thenReturn(new MessageResponse("Product deleted successfully!"));
 
@@ -131,7 +126,6 @@ class ProductRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should return saved product with category in db")
 	void saveProductWithCategory() throws Exception {
 		Category category = new Category();
 		category.setId(1);

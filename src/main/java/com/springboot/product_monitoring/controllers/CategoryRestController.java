@@ -51,7 +51,7 @@ public class CategoryRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/categories/delete/{id}")
-	public ResponseEntity deleteById(@PathVariable(name = "id") int id) {
+	public ResponseEntity<MessageResponse> deleteById(@PathVariable(name = "id") int id) {
 		categoryService.deleteById(id);
 		return ResponseEntity.ok(new MessageResponse("Category deleted successfully!"));
 	}

@@ -14,7 +14,6 @@ import com.springboot.product_monitoring.repositories.UserRepository;
 import com.springboot.product_monitoring.security.jwt.JwtUtils;
 import com.springboot.product_monitoring.security.service.UserDetailsImpl;
 import com.springboot.product_monitoring.services.AuthenticationService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,13 +22,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -57,8 +58,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		this.jwtUtils = jwtUtils;
 	}
 
-	@Override
-	public JwtResponse authenticateUser(LoginRequest loginRequest) {
+	@PostMapping("/signin")
+	public JwtResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -80,8 +81,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				roles);
 	}
 
-	@Override
-	public MessageResponse registerUser(SignupRequest signUpRequest) {
+	@PostMapping("/signup")
+	public MessageResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return new MessageResponse("Error: Username is already taken!");
@@ -95,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()),
 				signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail());
 
-		Set<String> strRoles = signUpRequest.getRoles();
+		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
 
 		if (strRoles == null) {
@@ -119,7 +120,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		user.setRoles(roles);
 		userRepository.save(user);
 
-		log.info("IN method registerUser - user by user name: {} was saved", user.getUsername());
 		return new MessageResponse("User registered successfully!");
 	}
 }

@@ -188,7 +188,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDIxNjg5MywiZXhwIjoxNjM0MjIwNDkzfQ.ehOgpG6P607SrZmCNxVlQTaD199ylKTrEw1FdUI2HHbrFLWeH6lonXYsGUA6fbTxuBS0lAH4_9xoFU-bGaAaCw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDc0NjMwMSwiZXhwIjoxNjM0NzQ5OTAxfQ.s9eguyxyB0HvAYhlyqmTU_rm3AhHc0hLEPq_3b-65Ghh_6Rlh_4q4IXOiajZl1h9M2jMkehhtLrEwCspmAlQcQ",
 									"type": "string"
 								}
 							]
@@ -197,7 +197,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"username\": \"users11\",\r\n    \"password\": \"useruserupd\",\r\n    \"firstName\": \"Anna\",\r\n    \"lastName\": \"Petrova\",\r\n    \"email\": \"updated@gmail.com\",\r\n    \"roles\": [\r\n        {\r\n            \"id\": 2\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"username\": \"users11\",\r\n    \"password\": \"useruserupd\",\r\n    \"firstName\": \"Anna\",\r\n    \"lastName\": \"Petrova\",\r\n    \"email\": \"updated@gmail.com\",\r\n    \"roles\": [\r\n        {\r\n            \"id\": 1\r\n        },\r\n        {\r\n            \"id\": 2\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -258,7 +258,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"users\",\r\n  \"name\": \"Oleg\",\r\n  \"surname\": \"Ivanov\",\r\n  \"password\": \"useruser\",\r\n  \"e-mail\": \"someone@gmail.com\",\r\n  \"user roles\": [\"admin\"]\r\n}",
+							"raw": "{\r\n  \"username\": \"users\",\r\n  \"firstName\": \"Oleg\",\r\n  \"lastName\": \"Ivanov\",\r\n  \"password\": \"useruser\",\r\n  \"email\": \"someone@gmail.com\",\r\n  \"roles\": [\"admin\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -544,7 +544,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDA2MzYzNSwiZXhwIjoxNjM0MDY3MjM1fQ.gLzqyWAiJDCVTOe3UoWkMwthImGHiRzL9RQdtiVjLscX-zOZ0YO0U_qLOos_v_fzNMqv_cGTRthay-ORqNnAmA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDIzMDE1OCwiZXhwIjoxNjM0MjMzNzU4fQ.j_b8nQHhLD4oL9Mk99a-Kqo-M2s5I90QqXLP9jUgmmo8xW-5-M_8wiFfR6iVeT3cs8UrA61M6zdk0PtgytjXAw",
 									"type": "string"
 								}
 							]
@@ -684,7 +684,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDIxNzkxNywiZXhwIjoxNjM0MjIxNTE3fQ.R-l3cORkNcIxiXbK_O5ekaIB7fFc2-OTMlAgTYWZ3siGfqgTVlri7HxGYBlVXcD7vCe8DSQRnEvecqI4CfhEQg",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDIzMDE1OCwiZXhwIjoxNjM0MjMzNzU4fQ.j_b8nQHhLD4oL9Mk99a-Kqo-M2s5I90QqXLP9jUgmmo8xW-5-M_8wiFfR6iVeT3cs8UrA61M6zdk0PtgytjXAw",
 									"type": "string"
 								}
 							]
@@ -693,7 +693,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"productName\": \"panta\",\r\n    \"categories\": [\r\n        {\r\n            \"id\": 1\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"productName\": \"fanta\",\r\n    \"categories\": [\r\n        {\r\n            \"id\": 1\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1101,7 +1101,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDIxNzkxNywiZXhwIjoxNjM0MjIxNTE3fQ.R-l3cORkNcIxiXbK_O5ekaIB7fFc2-OTMlAgTYWZ3siGfqgTVlri7HxGYBlVXcD7vCe8DSQRnEvecqI4CfhEQg",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDIzMDE1OCwiZXhwIjoxNjM0MjMzNzU4fQ.j_b8nQHhLD4oL9Mk99a-Kqo-M2s5I90QqXLP9jUgmmo8xW-5-M_8wiFfR6iVeT3cs8UrA61M6zdk0PtgytjXAw",
 									"type": "string"
 								}
 							]
@@ -1172,6 +1172,115 @@
 								"prices",
 								"delete",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "files",
+			"item": [
+				{
+					"name": "upload file to db",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNTI2NTk3NiwiZXhwIjoxNjM1MjY5NTc2fQ.ITUeCe8AmAIVDvsKbDsf3Vl3tnN5oHxidBVE5TWJXn7dJiaWJBm4rL0cdnSo24ZK9VWsOUSdrMo2i4MgpMIOOQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/product_monitoring/src/main/resources/prices.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/csv/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"csv",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "download prices from db in csv",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDg0NzA5MCwiZXhwIjoxNjM0ODUwNjkwfQ.PcgHUhMRPuxYKmbO-ltdT_t4emhRcu77gbROBVW_D9mRpGjG7z6WbbcAaqYMmLP7uip6ZSeI1u243zhrYJkjlw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/csv/download",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"csv",
+								"download"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get api-docs swagger",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VycyIsImlhdCI6MTYzNDkxODc5NiwiZXhwIjoxNjM0OTIyMzk2fQ.CHdDvGvNhN2tNsqDgMDoNsp_5yvuCLZaXR0Vb_2WRauzY7Nqeja7jlbIMxKGsClylxbxstAKZjdXJPqjQw-sww",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/v3/api-docs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v3",
+								"api-docs"
 							]
 						}
 					},

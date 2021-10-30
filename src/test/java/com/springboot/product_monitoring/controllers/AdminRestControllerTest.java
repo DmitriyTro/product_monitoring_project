@@ -6,7 +6,6 @@ import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.services.AdminService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -73,7 +72,6 @@ class AdminRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should return user by id")
 	void findUserById() throws Exception {
 		when(adminService.findUserById(anyInt())).thenReturn(oneUser);
 
@@ -87,7 +85,6 @@ class AdminRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should return user by user name")
 	void findByUsername() throws Exception {
 		when(adminService.findUserByUsername(anyString())).thenReturn(oneUser);
 
@@ -101,7 +98,6 @@ class AdminRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should return list of users")
 	void findAllUsers() throws Exception {
 		PageRequest pageRequest =  PageRequest.of(0, 10);
 		List<UserDTO> users = new ArrayList<>(Arrays.asList(oneUser, twoUser));
@@ -117,7 +113,6 @@ class AdminRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should return updated user")
 	void update() throws Exception {
 		when(adminService.update(any())).thenReturn(oneUser);
 
@@ -133,7 +128,6 @@ class AdminRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should delete user by id")
 	void deleteById() throws Exception {
 		when(adminService.deleteById(twoUser.getId())).thenReturn(new MessageResponse("User deleted successfully!"));
 

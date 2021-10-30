@@ -1,6 +1,7 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.ProductDTO;
+import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Category;
 import com.springboot.product_monitoring.entities.Product;
 import com.springboot.product_monitoring.exceptions.category.CategoryException;
@@ -78,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void deleteById(int id) {
+	public MessageResponse deleteById(int id) {
 		Product result = productRepository.findById(id).orElse(null);
 
 		if (result == null) {
@@ -88,27 +89,23 @@ public class ProductServiceImpl implements ProductService {
 
 		log.info("IN method deleteById product with id: {} successfully deleted", id);
 		productRepository.deleteById(id);
+		return new MessageResponse("Product deleted successfully!");
 	}
 
 	@Override
 	public ProductDTO saveProductWithCategory(Product product) {
 		Product productInDB = productRepository.findByProductName(product.getProductName()).orElse(new Product());
 
+		List<Category> categories = product.getCategories().stream().map(c -> {
+			Category productCategory = categoryRepository.findById(c.getId()).orElseThrow(() ->
+					new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_ID_NOT_FOUND
+										.getDescription(), c.getId())));
+			productCategory.getProducts().add(productInDB);
+			return productCategory;
+		}).collect(Collectors.toList());
+
 		productInDB.setProductName(product.getProductName());
-		productInDB.getCategories()
-				.addAll((product.getCategories()
-						.stream()
-						.map(c -> {
-							Category productCategory = categoryRepository.findById(c.getId()).orElse(null);
-							if (productCategory == null) {
-								log.warn("IN method saveProductWithCategory - no category found by id: {}",
-										c.getId());
-								throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_ID_NOT_FOUND
-										.getDescription(), c.getId()));
-							}
-							productCategory.getProducts().add(productInDB);
-							return productCategory;
-						})).collect(Collectors.toList()));
+		productInDB.setCategories(categories);
 
 		log.info("IN method saveProductWithCategory - product: {} with category: {} saved successfully",
 				product.getProductName(), productInDB.getCategories());

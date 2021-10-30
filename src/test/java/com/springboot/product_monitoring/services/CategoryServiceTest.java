@@ -88,7 +88,7 @@ class CategoryServiceTest {
 	@DisplayName("Should return category by category name")
 	void findByCategoryName() {
 
-		when(categoryRepository.findByCategoryName("testcategory")).thenReturn(category);
+		when(categoryRepository.findByCategoryName("testcategory")).thenReturn(Optional.ofNullable(category));
 		when(categoryMapper.toCategoryDTO(any(Category.class))).thenReturn(categoryDTO);
 
 		CategoryDTO actualCategoryDTO = categoryService.findByCategoryName("testcategory");
@@ -129,7 +129,7 @@ class CategoryServiceTest {
 	@DisplayName("Should save category")
 	void saveCategory() {
 
-		when(categoryRepository.findByCategoryName("testcategory")).thenReturn(category);
+		when(categoryRepository.findByCategoryName("testcategory")).thenReturn(Optional.of(category));
 
 		categoryService.saveCategory(category);
 		verify(categoryRepository, times(1)).save(argumentCaptor.capture());

@@ -88,7 +88,7 @@ class StoreServiceTest {
 	@DisplayName("Should return store by store name")
 	void findByStoreName() {
 
-		when(storeRepository.findByStoreName("teststore")).thenReturn(store);
+		when(storeRepository.findByStoreName("teststore")).thenReturn(Optional.ofNullable(store));
 		when(storeMapper.toStoreDTO(any(Store.class))).thenReturn(storeDTO);
 
 		StoreDTO actualStoreDTO = storeService.findByStoreName("teststore");
@@ -129,7 +129,7 @@ class StoreServiceTest {
 	@DisplayName("Should save store")
 	void saveStore() {
 
-		when(storeRepository.findByStoreName("teststore")).thenReturn(store);
+		when(storeRepository.findByStoreName("teststore")).thenReturn(Optional.of(store));
 
 		storeService.saveStore(store);
 		verify(storeRepository, times(1)).save(argumentCaptor.capture());

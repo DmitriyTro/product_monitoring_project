@@ -1,6 +1,7 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.PriceDTO;
+import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Price;
 import com.springboot.product_monitoring.entities.Product;
 import com.springboot.product_monitoring.entities.Store;
@@ -71,7 +72,7 @@ public class PriceServiceImpl implements PriceService {
 	}
 
 	@Override
-	public void deleteById(int id) {
+	public MessageResponse deleteById(int id) {
 		Price result = priceRepository.findById(id).orElse(null);
 
 		if (result == null) {
@@ -81,6 +82,7 @@ public class PriceServiceImpl implements PriceService {
 
 		log.info("IN method deleteById price with id: {} successfully deleted", id);
 		priceRepository.deleteById(id);
+		return new MessageResponse("Price deleted successfully!");
 	}
 
 	@Override
@@ -117,6 +119,7 @@ public class PriceServiceImpl implements PriceService {
 	@Override
 	public Page<PriceDTO> findAllByDateBetweenAndProduct_ProductName(Date from, Date to, String productName,
 	                                                                 Pageable pageable) {
+
 		Page<Price> pricePage = priceRepository.findAllByDateBetweenAndProduct_ProductName(from, to, productName,
 				pageable);
 		List<PriceDTO> pricesDTOs = priceMapper.toPricesDTOs(pricePage.getContent());

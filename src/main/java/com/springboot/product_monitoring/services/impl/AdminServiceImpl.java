@@ -1,6 +1,7 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.UserDTO;
+import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Role;
 import com.springboot.product_monitoring.entities.User;
 import com.springboot.product_monitoring.exceptions.errors.RoleErrorType;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -90,32 +92,26 @@ public class AdminServiceImpl implements AdminService {
 					.getDescription(), user.getUsername()));
 		}
 
+		Set<Role> roles = user.getRoles().stream().map(r -> {
+			Role userRole = roleRepository.findById(r.getId()).orElseThrow(() ->
+					new RoleException(String.format(RoleErrorType.ROLE_BY_ID_NOT_FOUND.getDescription(), r.getId())));
+			userRole.getUsers().add(userInDB);
+			return userRole;
+		}).collect(Collectors.toSet());
+
 		userInDB.setUsername(user.getUsername());
 		userInDB.setFirstName(user.getFirstName());
 		userInDB.setLastName(user.getLastName());
 		userInDB.setPassword(encoder.encode(user.getPassword()));
 		userInDB.setEmail(user.getEmail());
-		userInDB.getRoles()
-				.addAll((user.getRoles()
-						.stream()
-						.map(role -> {
-							Role userRole = roleRepository.findById(role.getId()).orElse(null);
-							if (userRole == null) {
-								log.warn("IN method update - no role found by id: {}",
-										role.getId());
-								throw new RoleException(String.format(RoleErrorType.ROLE_BY_ID_NOT_FOUND
-												.getDescription(), role.getId()));
-							}
-							userRole.getUsers().add(userInDB);
-							return userRole;
-						})).collect(Collectors.toSet()));
+		userInDB.setRoles(roles);
 
 		log.info("IN method update - user with id: {} updated successfully", userInDB.getId());
 		return userMapper.toUserDTO(userRepository.save(userInDB));
 	}
 
 	@Override
-	public void deleteById(int id) {
+	public MessageResponse deleteById(int id) {
 		User result = userRepository.findById(id).orElse(null);
 
 		if (result == null) {
@@ -125,5 +121,6 @@ public class AdminServiceImpl implements AdminService {
 
 		log.info("IN method deleteById user with id: {} successfully deleted", id);
 		userRepository.deleteById(id);
+		return new MessageResponse("User deleted successfully!");
 	}
 }

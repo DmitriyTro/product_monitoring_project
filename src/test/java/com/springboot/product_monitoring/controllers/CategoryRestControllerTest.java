@@ -6,7 +6,6 @@ import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.services.CategoryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -71,7 +70,6 @@ class CategoryRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
-	@DisplayName("Should return category by id")
 	void findCategoryById() throws Exception {
 		when(categoryService.findCategoryById(anyInt())).thenReturn(oneCategory);
 
@@ -85,7 +83,6 @@ class CategoryRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
-	@DisplayName("Should return category by category name")
 	void findByCategoryName() throws Exception {
 		when(categoryService.findByCategoryName(anyString())).thenReturn(oneCategory);
 
@@ -99,7 +96,6 @@ class CategoryRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
-	@DisplayName("Should return list of categories")
 	void findAllCategories() throws Exception {
 		PageRequest pageRequest =  PageRequest.of(0, 10);
 		List<CategoryDTO> categories = new ArrayList<>(Arrays.asList(oneCategory, twoCategory));
@@ -115,7 +111,6 @@ class CategoryRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should delete category by id")
 	void deleteById() throws Exception {
 		when(categoryService.deleteById(twoCategory.getId())).thenReturn(new MessageResponse("Category deleted successfully!"));
 
@@ -130,7 +125,6 @@ class CategoryRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	@DisplayName("Should return saved category in db")
 	void saveCategory() throws Exception {
 		when(categoryService.saveCategory(any())).thenReturn(oneCategory);
 

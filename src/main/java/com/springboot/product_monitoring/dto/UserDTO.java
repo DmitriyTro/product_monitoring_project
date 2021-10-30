@@ -2,7 +2,6 @@ package com.springboot.product_monitoring.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.springboot.product_monitoring.entities.Role;
 import lombok.Data;
 
@@ -13,25 +12,13 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserDTO {
 
-	@JsonProperty("user id")
 	private int id;
-
-	@JsonProperty("username")
 	private String username;
-
-	@JsonProperty("password")
 	private String password;
-
-	@JsonProperty("name")
 	private String firstName;
-
-	@JsonProperty("surname")
 	private String lastName;
-
-	@JsonProperty("e-mail")
 	private String email;
 
 	@JsonIgnoreProperties("users")
-	@JsonProperty("user roles")
 	private Set<Role> roles;
 }

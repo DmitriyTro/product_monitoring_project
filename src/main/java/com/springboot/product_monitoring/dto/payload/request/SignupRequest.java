@@ -1,6 +1,5 @@
 package com.springboot.product_monitoring.dto.payload.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -19,20 +18,25 @@ public class SignupRequest {
 	@Size(min = 6, max = 25)
 	private String password;
 
-	@JsonProperty("name")
 	@Size(max = 25)
 	private String firstName;
 
-	@JsonProperty("surname")
 	@Size(max = 25)
 	private String lastName;
 
-	@JsonProperty("e-mail")
 	@Email
 	@NotBlank
 	@Size(max = 30)
 	private String email;
 
-	@JsonProperty("user roles")
 	private Set<String> role;
+
+	public SignupRequest(String username, String password, String firstName, String lastName, String email, Set<String> role) {
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.role = role;
+	}
 }

@@ -1,5 +1,6 @@
 package com.springboot.product_monitoring.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 
@@ -22,6 +23,7 @@ public class Price {
 	@Column(name = "date")
 	private Timestamp date;
 
+	@JsonIgnoreProperties("categories")
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	@ToString.Exclude
@@ -31,4 +33,14 @@ public class Price {
 	@JoinColumn(name = "store_id")
 	@ToString.Exclude
 	private Store store;
+
+	public Price() {
+	}
+
+	public Price(int unitPrice, Timestamp date, Product product, Store store) {
+		this.unitPrice = unitPrice;
+		this.date = date;
+		this.product = product;
+		this.store = store;
+	}
 }

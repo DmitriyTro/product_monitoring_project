@@ -1,6 +1,7 @@
 package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.StoreDTO;
+import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.entities.Store;
 import com.springboot.product_monitoring.exceptions.errors.StoreErrorType;
 import com.springboot.product_monitoring.exceptions.store.StoreException;
@@ -71,7 +72,7 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public void deleteById(int id) {
+	public MessageResponse deleteById(int id) {
 		Store result = storeRepository.findById(id).orElse(null);
 
 		if (result == null) {
@@ -81,6 +82,7 @@ public class StoreServiceImpl implements StoreService {
 
 		log.info("IN method deleteById store with id: {} successfully deleted", id);
 		storeRepository.deleteById(id);
+		return new MessageResponse("Store deleted successfully!");
 	}
 
 	@Override
