@@ -86,21 +86,23 @@ public class PriceServiceImpl implements PriceService {
 	}
 
 	@Override
-	public PriceDTO savePriceWithProductIdAndStoreId(Price price, int productId, int storeId) {
-		Product product = productRepository.findById(productId).orElse(null);
+	public PriceDTO savePriceWithProductNameAndStoreName(Price price) {
+		Product product = productRepository.findByProductName(price.getProduct().getProductName()).orElse(null);
 
 		if (product == null) {
-			log.warn("IN method savePriceWithProductIdAndStoreId - no product found by id: {}", productId);
+			log.warn("IN method savePriceWithProductIdAndStoreId - no product found by id: {}",
+					price.getProduct().getProductName());
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND
-					.getDescription(), productId));
+					.getDescription(), price.getProduct().getProductName()));
 		}
 
-		Store store = storeRepository.findById(storeId).orElse(null);
+		Store store = storeRepository.findByStoreName(price.getStore().getStoreName()).orElse(null);
 
 		if (store == null) {
-			log.warn("IN method savePriceWithProductIdAndStoreId - no store found by id: {}", storeId);
+			log.warn("IN method savePriceWithProductIdAndStoreId - no store found by id: {}",
+					price.getStore().getStoreName());
 			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND
-					.getDescription(), storeId));
+					.getDescription(), price.getStore().getStoreName()));
 		}
 
 		Price priceInDB = priceRepository.findById(price.getId()).orElse(new Price());
@@ -112,7 +114,7 @@ public class PriceServiceImpl implements PriceService {
 		priceInDB.setStore(store);
 
 		log.info("IN method savePrice - price with product by id: {} and store by id: {} saved successfully",
-				productId, storeId);
+				product.getId(), store.getId());
 		return priceMapper.toPriceDTO(priceRepository.save(priceInDB));
 	}
 
@@ -133,5 +135,35 @@ public class PriceServiceImpl implements PriceService {
 
 		log.info("IN method findAllByDateBetweenAndProductName - {} prices found", pricePage.getTotalElements());
 		return new PageImpl<>(pricesDTOs, pageable, pricePage.getTotalElements());
+	}
+
+	@Override
+	public PriceDTO findPricesByProductNameAndStoreNameAndReturnGreatest(String productName, String firstStoreName,
+	                                                              String secondStoreName) {
+
+		Price onePrice = priceRepository.findFirstByProduct_ProductNameAndStore_StoreNameOrderByDateDesc(
+				productName, firstStoreName);
+
+		Price twoPrice = priceRepository.findFirstByProduct_ProductNameAndStore_StoreNameOrderByDateDesc(
+				productName, secondStoreName);
+
+		if (onePrice == null || twoPrice == null) {
+			if (onePrice == null) {
+				log.warn("IN method findPricesAndReturnGreatest - price by product name: {} and store name: {} " +
+						"not found", productName, firstStoreName);
+				throw new PriceException(String.format(PriceErrorType.PRICE_BY_PRODUCT_NAME__AND__STORE_NAME__NOT_FOUND
+						.getDescription(), productName, firstStoreName));
+			} else {
+				log.warn("IN method findPricesAndReturnGreatest - price by product name: {} and store name: {} " +
+						"not found", productName, secondStoreName);
+				throw new PriceException(String.format(PriceErrorType.PRICE_BY_PRODUCT_NAME__AND__STORE_NAME__NOT_FOUND
+						.getDescription(), productName, secondStoreName));
+			}
+		}
+
+		Price greatestPrice = onePrice.getUnitPrice() > twoPrice.getUnitPrice() ? onePrice : twoPrice;
+		log.info("IN method findPricesAndReturnGreatest - greatest price by product name: {} and store name: {} " +
+				"was found", productName, greatestPrice.getStore().getStoreName());
+		return priceMapper.toPriceDTO(greatestPrice);
 	}
 }

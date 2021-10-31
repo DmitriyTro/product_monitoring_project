@@ -9,5 +9,7 @@ import java.util.Date;
 
 public interface PriceRepository extends JpaRepository<Price, Integer> {
 
+	Price findFirstByProduct_ProductNameAndStore_StoreNameOrderByDateDesc(String productName, String storeName);
+
 	Page<Price> findAllByDateBetweenAndProduct_ProductName(Date from, Date to, String productName, Pageable pageable);
 }

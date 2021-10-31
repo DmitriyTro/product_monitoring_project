@@ -1,6 +1,5 @@
 package com.springboot.product_monitoring.csv;
 
-import com.springboot.product_monitoring.dto.payload.response.PriceDynamicsResponse;
 import com.springboot.product_monitoring.entities.Price;
 import com.springboot.product_monitoring.repositories.ProductRepository;
 import com.springboot.product_monitoring.repositories.StoreRepository;
@@ -26,8 +25,7 @@ public class CSVCustomParser {
 	private final StoreRepository storeRepository;
 
 	@Autowired
-	public CSVCustomParser(ProductRepository productRepository,
-	                       StoreRepository storeRepository) {
+	public CSVCustomParser(ProductRepository productRepository, StoreRepository storeRepository) {
 		this.productRepository = productRepository;
 		this.storeRepository = storeRepository;
 	}
@@ -79,27 +77,6 @@ public class CSVCustomParser {
 						String.valueOf(price.getDate()),
 						String.valueOf(price.getProduct().getProductName()),
 						String.valueOf(price.getStore().getStoreName()));
-
-				csvPrinter.printRecord(data);
-			}
-
-			csvPrinter.flush();
-			return new ByteArrayInputStream(out.toByteArray());
-		} catch (IOException e) {
-			throw new RuntimeException("Fail to import data to CSV file: " + e.getMessage());
-		}
-	}
-
-	public ByteArrayInputStream pricesToCSVByDateBetween(List<PriceDynamicsResponse> prices) {
-		final CSVFormat format = CSVFormat.DEFAULT.builder().setQuoteMode(QuoteMode.MINIMAL).build();
-
-		try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-		     CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format)) {
-			for (PriceDynamicsResponse price : prices) {
-				List<String> data = Arrays.asList(
-						String.valueOf(price.getId()),
-						String.valueOf(price.getUnitPrice()),
-						String.valueOf(price.getDate()));
 
 				csvPrinter.printRecord(data);
 			}

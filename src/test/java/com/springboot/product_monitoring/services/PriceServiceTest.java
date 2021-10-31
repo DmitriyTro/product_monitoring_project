@@ -78,6 +78,7 @@ class PriceServiceTest {
 
 		store = new Store();
 		store.setId(2);
+		store.setStoreName("teststore");
 
 		price = new Price();
 		price.setId(1);
@@ -171,13 +172,13 @@ class PriceServiceTest {
 
 	@Test
 	@DisplayName("Should save price with product and store")
-	void savePriceWithProductIdAndStoreId() {
+	void savePriceWithProductNameAndStoreName() {
 
 		when(priceRepository.findById(1)).thenReturn(Optional.of(price));
-		when(productRepository.findById(1)).thenReturn(Optional.ofNullable(product));
-		when(storeRepository.findById(2)).thenReturn(Optional.of(store));
+		when(productRepository.findByProductName("testproduct")).thenReturn(Optional.ofNullable(product));
+		when(storeRepository.findByStoreName("teststore")).thenReturn(Optional.of(store));
 
-		priceService.savePriceWithProductIdAndStoreId(price, product.getId(), store.getId());
+		priceService.savePriceWithProductNameAndStoreName(price);
 
 		verify(priceRepository, times(1)).save(argumentCaptor.capture());
 

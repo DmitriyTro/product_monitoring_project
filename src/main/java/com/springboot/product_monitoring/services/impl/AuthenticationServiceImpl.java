@@ -22,10 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,8 +55,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		this.jwtUtils = jwtUtils;
 	}
 
-	@PostMapping("/signin")
-	public JwtResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	@Override
+	public JwtResponse authenticateUser(LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -81,8 +78,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				roles);
 	}
 
-	@PostMapping("/signup")
-	public MessageResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	@Override
+	public MessageResponse registerUser(SignupRequest signUpRequest) {
 
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return new MessageResponse("Error: Username is already taken!");
@@ -96,7 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()),
 				signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail());
 
-		Set<String> strRoles = signUpRequest.getRole();
+		Set<String> strRoles = signUpRequest.getRoles();
 		Set<Role> roles = new HashSet<>();
 
 		if (strRoles == null) {

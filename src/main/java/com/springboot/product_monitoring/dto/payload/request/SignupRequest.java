@@ -29,14 +29,14 @@ public class SignupRequest {
 	@Size(max = 30)
 	private String email;
 
-	private Set<String> role;
+	private Set<String> roles;
 
-	public SignupRequest(String username, String password, String firstName, String lastName, String email, Set<String> role) {
+	public SignupRequest(String username, String password, String firstName, String lastName, String email, Set<String> roles) {
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.role = role;
+		this.roles = roles;
 	}
 }

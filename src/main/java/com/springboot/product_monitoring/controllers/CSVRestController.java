@@ -1,6 +1,6 @@
 package com.springboot.product_monitoring.controllers;
 
-import com.springboot.product_monitoring.csv.CSVParser;
+import com.springboot.product_monitoring.csv.CSVCustomParser;
 import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.exceptions.csv.CsvCustomExceptionHandler;
 import com.springboot.product_monitoring.services.CSVService;
@@ -34,7 +34,7 @@ public class CSVRestController {
 	public ResponseEntity<MessageResponse> uploadFile(@RequestParam("file") MultipartFile file) {
 		String message = "";
 
-		if (CSVParser.hasCSVFormat(file)) {
+		if (CSVCustomParser.hasCSVFormat(file)) {
 			try {
 				fileService.save(file);
 

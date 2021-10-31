@@ -1,6 +1,6 @@
 package com.springboot.product_monitoring.services.impl;
 
-import com.springboot.product_monitoring.csv.CSVParser;
+import com.springboot.product_monitoring.csv.CSVCustomParser;
 import com.springboot.product_monitoring.entities.Price;
 import com.springboot.product_monitoring.repositories.PriceRepository;
 import com.springboot.product_monitoring.services.CSVService;
@@ -16,18 +16,18 @@ import java.util.List;
 public class CSVServiceImpl implements CSVService {
 
 	private final PriceRepository priceRepository;
-	private final CSVParser csvParser;
+	private final CSVCustomParser csvCustomParser;
 
 	@Autowired
-	public CSVServiceImpl(PriceRepository priceRepository, CSVParser csvParser) {
+	public CSVServiceImpl(PriceRepository priceRepository, CSVCustomParser csvCustomParser) {
 		this.priceRepository = priceRepository;
-		this.csvParser = csvParser;
+		this.csvCustomParser = csvCustomParser;
 	}
 
 	public void save(MultipartFile file) {
 
 		try {
-			List<Price> prices = csvParser.csvToPrices(file.getInputStream());
+			List<Price> prices = csvCustomParser.csvToPrices(file.getInputStream());
 			priceRepository.saveAll(prices);
 		} catch (IOException e) {
 			throw new RuntimeException("Fail to store csv data: " + e.getMessage());
@@ -36,6 +36,6 @@ public class CSVServiceImpl implements CSVService {
 
 	public ByteArrayInputStream load() {
 
-		return csvParser.pricesToCSV(priceRepository.findAll());
+		return csvCustomParser.pricesToCSV(priceRepository.findAll());
 	}
 }

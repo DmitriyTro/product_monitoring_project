@@ -115,17 +115,19 @@ class PriceRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
-	void savePriceWithProductIdAndStoreId() throws Exception {
+	void savePriceWithProductNameAndStoreName() throws Exception {
 		Product product = new Product();
 		product.setId(2);
+		product.setProductName("testproduct");
 
 		Store store = new Store();
 		store.setId(3);
+		store.setStoreName("teststore");
 
 		onePrice.setProduct(product);
 		onePrice.setStore(store);
 
-		when(priceService.savePriceWithProductIdAndStoreId(any(), anyInt(), anyInt())).thenReturn(onePrice);
+		when(priceService.savePriceWithProductNameAndStoreName(any())).thenReturn(onePrice);
 
 		mockMvc.perform(put("/api/auth/prices/save")
 						.param("productId", String.valueOf(product.getId()))

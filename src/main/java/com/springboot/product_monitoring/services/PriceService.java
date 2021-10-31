@@ -18,5 +18,7 @@ public interface PriceService {
 
 	Page<PriceDTO> findAllByDateBetweenAndProduct_ProductName(Date from, Date to, String productName, Pageable pageable);
 
-	PriceDTO savePriceWithProductIdAndStoreId(Price price, int productId, int storeId);
+	PriceDTO savePriceWithProductNameAndStoreName(Price price);
+
+	PriceDTO findPricesByProductNameAndStoreNameAndReturnGreatest(String productName, String firstStoreName, String secondStoreName);
 }

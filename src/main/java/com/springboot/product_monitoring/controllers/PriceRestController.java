@@ -58,18 +58,26 @@ public class PriceRestController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/prices/save")
-	public ResponseEntity<PriceDTO> savePriceWithProductIdAndStoreId(@Valid
-	               @RequestBody Price price, @RequestParam int productId, @RequestParam int storeId) {
-		return new ResponseEntity<>(priceService.savePriceWithProductIdAndStoreId(price, productId, storeId),
-				HttpStatus.CREATED);
+	public ResponseEntity<PriceDTO> savePriceWithProductIdAndStoreId(@Valid @RequestBody Price price) {
+		return new ResponseEntity<>(priceService.savePriceWithProductNameAndStoreName(price), HttpStatus.CREATED);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping(value = "/prices/list/date")
 	public Page<PriceDTO> findAllByDateBetweenAndProduct_ProductName(@Valid
 	               @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-	               @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date to, String productName,
-	                                                     Pageable pageable) {
+	               @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date to,
+	               @RequestParam String productName, Pageable pageable) {
 		return priceService.findAllByDateBetweenAndProduct_ProductName(from, to, productName, pageable);
+	}
+
+	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+	@GetMapping(value = "/prices/equals")
+	public ResponseEntity<PriceDTO> findPricesByProductNameAndStoreNameAndReturnGreatest(
+			@RequestParam String productName,
+			@RequestParam String firstStore,
+			@RequestParam String secondStore) {
+		return new ResponseEntity<>(priceService.findPricesByProductNameAndStoreNameAndReturnGreatest(
+				productName, firstStore, secondStore), HttpStatus.OK);
 	}
 }
