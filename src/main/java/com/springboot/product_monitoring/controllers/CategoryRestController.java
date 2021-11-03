@@ -45,7 +45,7 @@ public class CategoryRestController {
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping(value = "/categories/list")
 	public Page<CategoryDTO> findAllCategories(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 		return categoryService.findAllCategories(pageable);
 	}
 

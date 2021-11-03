@@ -14,6 +14,7 @@ import com.springboot.product_monitoring.repositories.UserRepository;
 import com.springboot.product_monitoring.security.jwt.JwtUtils;
 import com.springboot.product_monitoring.security.service.UserDetailsImpl;
 import com.springboot.product_monitoring.services.AuthenticationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -117,6 +119,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		user.setRoles(roles);
 		userRepository.save(user);
 
+		log.info("IN method registerUser - user by user name: {} was saved", user.getUsername());
 		return new MessageResponse("User registered successfully!");
 	}
 }

@@ -47,7 +47,7 @@ public class ProductRestController {
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping(value = "/products/list")
 	public Page<ProductDTO> findAllProducts(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 		return productService.findAllProducts(pageable);
 	}
 

@@ -6,6 +6,7 @@ import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
 import com.springboot.product_monitoring.services.StoreService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -70,6 +71,7 @@ public class StoreRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
+	@DisplayName("Should return store by id")
 	void findStoreById() throws Exception {
 		when(storeService.findStoreById(anyInt())).thenReturn(oneStore);
 
@@ -83,6 +85,7 @@ public class StoreRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "USER")
+	@DisplayName("Should return store by store name")
 	void findByStoreName() throws Exception {
 		when(storeService.findByStoreName(anyString())).thenReturn(oneStore);
 
@@ -96,6 +99,7 @@ public class StoreRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
+	@DisplayName("Should return list of stores")
 	void findAllStores() throws Exception {
 		PageRequest pageRequest =  PageRequest.of(0, 10);
 		List<StoreDTO> stores = new ArrayList<>(Arrays.asList(oneStore, twoStore));
@@ -111,6 +115,7 @@ public class StoreRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
+	@DisplayName("Should delete store by id")
 	void deleteById() throws Exception {
 		when(storeService.deleteById(twoStore.getId())).thenReturn(new MessageResponse("Store deleted successfully!"));
 
@@ -125,6 +130,7 @@ public class StoreRestControllerTest {
 
 	@Test
 	@WithMockUser(roles = "ADMIN")
+	@DisplayName("Should return saved store ib db")
 	void saveStore() throws Exception {
 		when(storeService.saveStore(any())).thenReturn(oneStore);
 

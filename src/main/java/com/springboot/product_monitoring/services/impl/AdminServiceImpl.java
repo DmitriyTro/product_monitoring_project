@@ -34,7 +34,10 @@ public class AdminServiceImpl implements AdminService {
 	private final RoleRepository roleRepository;
 
 	@Autowired
-	public AdminServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder encoder, RoleRepository roleRepository) {
+	public AdminServiceImpl(UserRepository userRepository,
+	                        UserMapper userMapper,
+	                        PasswordEncoder encoder,
+	                        RoleRepository roleRepository) {
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
 		this.encoder = encoder;

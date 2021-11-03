@@ -45,7 +45,7 @@ public class AdminRestController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users/list")
 	public Page<UserDTO> findAllUsers(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 		return adminService.findAllUsers(pageable);
 	}
 

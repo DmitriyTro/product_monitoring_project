@@ -2,6 +2,7 @@ package com.springboot.product_monitoring.controllers;
 
 import com.springboot.product_monitoring.dto.PriceDTO;
 import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
+import com.springboot.product_monitoring.dto.payload.response.PriceDynamicsResponse;
 import com.springboot.product_monitoring.entities.Price;
 import com.springboot.product_monitoring.exceptions.price.PriceCustomExceptionHandler;
 import com.springboot.product_monitoring.exceptions.product.ProductCustomExceptionHandler;
@@ -12,14 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @PriceCustomExceptionHandler
@@ -45,7 +44,7 @@ public class PriceRestController {
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 	@GetMapping(value = "/prices/list")
 	public Page<PriceDTO> findAllPrices(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 		return priceService.findAllPrices(pageable);
 	}
 
@@ -63,21 +62,22 @@ public class PriceRestController {
 	}
 
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-	@GetMapping(value = "/prices/list/date")
-	public Page<PriceDTO> findAllByDateBetweenAndProduct_ProductName(@Valid
-	               @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-	               @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date to,
-	               @RequestParam String productName, Pageable pageable) {
-		return priceService.findAllByDateBetweenAndProduct_ProductName(from, to, productName, pageable);
+	@GetMapping(value = "/prices/equals")
+	public ResponseEntity<PriceDTO> findPricesByProductIdAndStoreIdAndReturnGreatest(
+			@RequestParam int productId,
+			@RequestParam int firstStoreId,
+			@RequestParam int secondStoreId) {
+		return new ResponseEntity<>(priceService.findPricesByProductIdAndStoreIdAndReturnGreatest(
+				productId, firstStoreId, secondStoreId), HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-	@GetMapping(value = "/prices/equals")
-	public ResponseEntity<PriceDTO> findPricesByProductNameAndStoreNameAndReturnGreatest(
-			@RequestParam String productName,
-			@RequestParam String firstStore,
-			@RequestParam String secondStore) {
-		return new ResponseEntity<>(priceService.findPricesByProductNameAndStoreNameAndReturnGreatest(
-				productName, firstStore, secondStore), HttpStatus.OK);
+	@GetMapping(value = "/prices/list/dynamics")
+	public Page<PriceDynamicsResponse> findPriceDynamicsByProductIdAndStoreId(
+			@PageableDefault(sort = "id", direction = Sort.Direction.ASC)
+			@RequestParam int productId,
+			@RequestParam int storeId,
+			Pageable pageable) {
+		return priceService.findPriceDynamicsByProductIdAndStoreId(productId, storeId, pageable);
 	}
 }

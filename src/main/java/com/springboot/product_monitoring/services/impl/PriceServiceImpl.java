@@ -2,6 +2,7 @@ package com.springboot.product_monitoring.services.impl;
 
 import com.springboot.product_monitoring.dto.PriceDTO;
 import com.springboot.product_monitoring.dto.payload.response.MessageResponse;
+import com.springboot.product_monitoring.dto.payload.response.PriceDynamicsResponse;
 import com.springboot.product_monitoring.entities.Price;
 import com.springboot.product_monitoring.entities.Product;
 import com.springboot.product_monitoring.entities.Store;
@@ -11,6 +12,7 @@ import com.springboot.product_monitoring.exceptions.errors.StoreErrorType;
 import com.springboot.product_monitoring.exceptions.price.PriceException;
 import com.springboot.product_monitoring.exceptions.product.ProductException;
 import com.springboot.product_monitoring.exceptions.store.StoreException;
+import com.springboot.product_monitoring.mappers.PriceDynamicsResponseMapper;
 import com.springboot.product_monitoring.mappers.PriceMapper;
 import com.springboot.product_monitoring.repositories.PriceRepository;
 import com.springboot.product_monitoring.repositories.ProductRepository;
@@ -35,13 +37,19 @@ public class PriceServiceImpl implements PriceService {
 	private final ProductRepository productRepository;
 	private final StoreRepository storeRepository;
 	private final PriceMapper priceMapper;
+	private final PriceDynamicsResponseMapper priceDynamicsResponseMapper;
 
 	@Autowired
-	public PriceServiceImpl(PriceRepository priceRepository, ProductRepository productRepository, StoreRepository storeRepository, PriceMapper priceMapper) {
+	public PriceServiceImpl(PriceRepository priceRepository,
+	                        ProductRepository productRepository,
+	                        StoreRepository storeRepository,
+	                        PriceMapper priceMapper,
+	                        PriceDynamicsResponseMapper priceDynamicsResponseMapper) {
 		this.priceRepository = priceRepository;
 		this.productRepository = productRepository;
 		this.storeRepository = storeRepository;
 		this.priceMapper = priceMapper;
+		this.priceDynamicsResponseMapper = priceDynamicsResponseMapper;
 	}
 
 	@Override
@@ -119,51 +127,72 @@ public class PriceServiceImpl implements PriceService {
 	}
 
 	@Override
-	public Page<PriceDTO> findAllByDateBetweenAndProduct_ProductName(Date from, Date to, String productName,
-	                                                                 Pageable pageable) {
+	public List<PriceDynamicsResponse> findAllByDateBetweenAndProductIdAndStoreId(
+			Date from, Date to, int productId, int storeId) {
 
-		Page<Price> pricePage = priceRepository.findAllByDateBetweenAndProduct_ProductName(from, to, productName,
-				pageable);
-		List<PriceDTO> pricesDTOs = priceMapper.toPricesDTOs(pricePage.getContent());
+		List<Price> prices = priceRepository.findPricesByDateBetweenAndProduct_IdAndStore_Id(
+				from, to, productId, storeId);
 
-		if (pricePage.isEmpty()) {
-			log.warn("IN method findAllByDateBetweenAndProductName - no prices found by product name: {} " +
+		if (prices.isEmpty()) {
+			log.warn("IN method findAllByDateBetweenAndProductName - no prices found by product id: {} and store id: {} " +
 							"in the date range: {} - {}",
-					productName, from, to);
+					productId, storeId, from, to);
 			throw new PriceException(PriceErrorType.PRICES_NOT_FOUND.getDescription());
 		}
 
-		log.info("IN method findAllByDateBetweenAndProductName - {} prices found", pricePage.getTotalElements());
-		return new PageImpl<>(pricesDTOs, pageable, pricePage.getTotalElements());
+		List<PriceDynamicsResponse> pricesDynamics = priceDynamicsResponseMapper.toPricesDynamicResponse(prices);
+
+		log.info("IN method findAllByDateBetweenAndProductName - {} prices found", prices.size());
+		return pricesDynamics;
 	}
 
 	@Override
-	public PriceDTO findPricesByProductNameAndStoreNameAndReturnGreatest(String productName, String firstStoreName,
-	                                                              String secondStoreName) {
+	public PriceDTO findPricesByProductIdAndStoreIdAndReturnGreatest(int productId, int firstStoreId,
+	                                                                 int secondStoreId) {
 
-		Price onePrice = priceRepository.findFirstByProduct_ProductNameAndStore_StoreNameOrderByDateDesc(
-				productName, firstStoreName);
+		Price onePrice = priceRepository.findFirstByProduct_IdAndStore_IdOrderByDateDesc(productId, firstStoreId);
 
-		Price twoPrice = priceRepository.findFirstByProduct_ProductNameAndStore_StoreNameOrderByDateDesc(
-				productName, secondStoreName);
+		Price twoPrice = priceRepository.findFirstByProduct_IdAndStore_IdOrderByDateDesc(productId, secondStoreId);
 
 		if (onePrice == null || twoPrice == null) {
 			if (onePrice == null) {
-				log.warn("IN method findPricesAndReturnGreatest - price by product name: {} and store name: {} " +
-						"not found", productName, firstStoreName);
-				throw new PriceException(String.format(PriceErrorType.PRICE_BY_PRODUCT_NAME__AND__STORE_NAME__NOT_FOUND
-						.getDescription(), productName, firstStoreName));
+				log.warn("IN method findPricesAndReturnGreatest - price by product id: {} and store id: {} " +
+						"not found", productId, firstStoreId);
+				throw new PriceException(String.format(PriceErrorType.PRICE_BY_PRODUCT_ID__AND__STORE_ID__NOT_FOUND
+						.getDescription(), productId, firstStoreId));
 			} else {
-				log.warn("IN method findPricesAndReturnGreatest - price by product name: {} and store name: {} " +
-						"not found", productName, secondStoreName);
-				throw new PriceException(String.format(PriceErrorType.PRICE_BY_PRODUCT_NAME__AND__STORE_NAME__NOT_FOUND
-						.getDescription(), productName, secondStoreName));
+				log.warn("IN method findPricesAndReturnGreatest - price by product id: {} and store id: {} " +
+						"not found", productId, secondStoreId);
+				throw new PriceException(String.format(PriceErrorType.PRICE_BY_PRODUCT_ID__AND__STORE_ID__NOT_FOUND
+						.getDescription(), productId, secondStoreId));
 			}
 		}
 
 		Price greatestPrice = onePrice.getUnitPrice() > twoPrice.getUnitPrice() ? onePrice : twoPrice;
-		log.info("IN method findPricesAndReturnGreatest - greatest price by product name: {} and store name: {} " +
-				"was found", productName, greatestPrice.getStore().getStoreName());
+
+		log.info("IN method findPricesAndReturnGreatest - greatest price by product id: {} and store id: {} " +
+				"was found", productId, greatestPrice.getStore().getId());
 		return priceMapper.toPriceDTO(greatestPrice);
+	}
+
+	@Override
+	public Page<PriceDynamicsResponse> findPriceDynamicsByProductIdAndStoreId(int productId, int storeId,
+	                                                                          Pageable pageable) {
+
+		Page<Price> pricePage = priceRepository.findPricesByProduct_IdAndStore_Id(productId, storeId,
+				pageable);
+
+		if (pricePage.isEmpty()) {
+			log.warn("IN method findPriceDynamics - prices by product id: {} and store id: {} " +
+					"not found", productId, storeId);
+			throw new PriceException(String.format(PriceErrorType.PRICES_BY_PRODUCT_ID__AND__STORE_ID__NOT_FOUND
+					.getDescription(), productId, storeId));
+		}
+
+		List<PriceDynamicsResponse> pricesDynamics = priceDynamicsResponseMapper.toPricesDynamicResponse(pricePage.getContent());
+
+		log.info("IN method findPriceDynamics - list of price dynamics return successfully, total elements: {}",
+				pricePage.getTotalElements());
+		return new PageImpl<>(pricesDynamics, pageable, pricePage.getTotalElements());
 	}
 }

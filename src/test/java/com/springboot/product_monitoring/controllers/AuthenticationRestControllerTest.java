@@ -9,6 +9,7 @@ import com.springboot.product_monitoring.security.service.UserDetailsImpl;
 import com.springboot.product_monitoring.services.AuthenticationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -65,6 +66,7 @@ class AuthenticationRestControllerTest {
 	}
 
 	@Test
+	@DisplayName("Should authenticate user by user name and password")
 	void authenticateUser() throws Exception {
 		LoginRequest loginRequest = new LoginRequest(userDetails.getUsername(), userDetails.getPassword());
 		List<String> roles = new ArrayList<>(List.of(userDetails.getAuthorities().toString()));
@@ -84,6 +86,7 @@ class AuthenticationRestControllerTest {
 	}
 
 	@Test
+	@DisplayName("Should return saved user in db")
 	void registerUser() throws Exception {
 		Set<String> roles = new HashSet<>(Set.of(userDetails.getAuthorities().toString()));
 		SignupRequest signUpRequest = new SignupRequest(userDetails.getUsername(), userDetails.getPassword(), userDetails.getFirstName(),

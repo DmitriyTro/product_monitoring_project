@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class PriceDTO {
 
 	private int id;
