@@ -95,22 +95,22 @@ public class PriceServiceImpl implements PriceService {
 
 	@Override
 	public PriceDTO savePriceWithProductNameAndStoreName(Price price) {
-		Product product = productRepository.findByProductName(price.getProduct().getProductName()).orElse(null);
+		Product product = productRepository.findById(price.getProduct().getId()).orElse(null);
 
 		if (product == null) {
 			log.warn("IN method savePriceWithProductIdAndStoreId - no product found by id: {}",
-					price.getProduct().getProductName());
+					price.getProduct().getId());
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND
-					.getDescription(), price.getProduct().getProductName()));
+					.getDescription(), price.getProduct().getId()));
 		}
 
-		Store store = storeRepository.findByStoreName(price.getStore().getStoreName()).orElse(null);
+		Store store = storeRepository.findById(price.getStore().getId()).orElse(null);
 
 		if (store == null) {
 			log.warn("IN method savePriceWithProductIdAndStoreId - no store found by id: {}",
-					price.getStore().getStoreName());
+					price.getStore().getId());
 			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND
-					.getDescription(), price.getStore().getStoreName()));
+					.getDescription(), price.getStore().getId()));
 		}
 
 		Price priceInDB = priceRepository.findById(price.getId()).orElse(new Price());
@@ -132,13 +132,6 @@ public class PriceServiceImpl implements PriceService {
 
 		List<Price> prices = priceRepository.findPricesByDateBetweenAndProduct_IdAndStore_Id(
 				from, to, productId, storeId);
-
-		if (prices.isEmpty()) {
-			log.warn("IN method findAllByDateBetweenAndProductName - no prices found by product id: {} and store id: {} " +
-							"in the date range: {} - {}",
-					productId, storeId, from, to);
-			throw new PriceException(PriceErrorType.PRICES_NOT_FOUND.getDescription());
-		}
 
 		List<PriceDynamicsResponse> pricesDynamics = priceDynamicsResponseMapper.toPricesDynamicResponse(prices);
 

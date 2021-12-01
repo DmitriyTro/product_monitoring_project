@@ -189,8 +189,8 @@ class PriceServiceTest {
 	void savePriceWithProductNameAndStoreName() {
 
 		when(priceRepository.findById(1)).thenReturn(Optional.of(price));
-		when(productRepository.findByProductName("testproduct")).thenReturn(Optional.ofNullable(product));
-		when(storeRepository.findByStoreName("teststore")).thenReturn(Optional.of(store));
+		when(productRepository.findById(1)).thenReturn(Optional.ofNullable(product));
+		when(storeRepository.findById(2)).thenReturn(Optional.of(store));
 
 		priceService.savePriceWithProductNameAndStoreName(price);
 

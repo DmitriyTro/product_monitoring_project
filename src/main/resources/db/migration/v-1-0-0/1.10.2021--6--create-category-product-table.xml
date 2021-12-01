@@ -34,7 +34,7 @@
                                  constraintName="category_product_product_id_fk"
                                  referencedTableName="product"
                                  referencedColumnNames="id"
-                                 onDelete="NO ACTION"
+                                 onDelete="CASCADE"
                                  onUpdate="CASCADE"/>
 
         <addUniqueConstraint tableName="category_product" columnNames="category_id, product_id"/>

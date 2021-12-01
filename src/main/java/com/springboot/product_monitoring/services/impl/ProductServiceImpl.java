@@ -109,8 +109,12 @@ public class ProductServiceImpl implements ProductService {
 		productInDB.setProductName(product.getProductName());
 		productInDB.setCategories(categories);
 
-		log.info("IN method saveProductWithCategory - product: {} with category: {} saved successfully",
-				product.getProductName(), productInDB.getCategories());
-		return productMapper.toProductDTO(productRepository.save(productInDB));
+		try {
+			log.info("IN method saveProductWithCategory - product: {} with category: {} saved successfully",
+					product.getProductName(), productInDB.getCategories());
+			return productMapper.toProductDTO(productRepository.save(productInDB));
+		} catch (Exception e) {
+			throw new ProductException(ProductErrorType.PRODUCT_ALREADY_EXISTS.getDescription());
+		}
 	}
 }

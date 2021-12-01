@@ -71,7 +71,7 @@ public class CSVCustomParser {
 		final CSVFormat format = CSVFormat.DEFAULT.builder().setQuoteMode(QuoteMode.MINIMAL).build();
 
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-		     CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);) {
+		     CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format)) {
 			for (Price price : prices) {
 				List<String> data = Arrays.asList(
 						String.valueOf(price.getId()),
@@ -94,7 +94,7 @@ public class CSVCustomParser {
 		final CSVFormat format = CSVFormat.DEFAULT.builder().setQuoteMode(QuoteMode.MINIMAL).build();
 
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-		     CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);) {
+		     CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format)) {
 			for (PriceDynamicsResponse price : prices) {
 				List<String> data = Arrays.asList(
 						String.valueOf(price.getId()),
