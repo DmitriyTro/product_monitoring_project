@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd
+            http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.2.xsd">
+
+    <changeSet id="0.1.10" author="DmitriiTrofimov">
+        <tagDatabase tag="CT category_product"/>
+    </changeSet>
+
+    <changeSet id="0.1.11" author="DmitriiTrofimov">
+        <createTable tableName="category_product">
+            <column name="category_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="product_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="category_product"
+                                 baseColumnNames="category_id"
+                                 constraintName="category_product_category_id_fk"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"
+                                 onDelete="NO ACTION"
+                                 onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="category_product"
+                                 baseColumnNames="product_id"
+                                 constraintName="category_product_product_id_fk"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+        <addUniqueConstraint tableName="category_product" columnNames="category_id, product_id"/>
+    </changeSet>
+
+</databaseChangeLog>
