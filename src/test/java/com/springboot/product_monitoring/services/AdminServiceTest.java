@@ -85,7 +85,7 @@ class AdminServiceTest {
 	@DisplayName("Should return user by id")
 	void findUserById() {
 
-		when(userRepository.findById(1)).thenReturn(Optional.ofNullable(user));
+		when(userRepository.findUserById(1)).thenReturn(user);
 		when(userMapper.toUserDTO(any(User.class))).thenReturn(userDTO);
 
 		UserDTO actualUserDTO = adminService.findUserById(1);
@@ -130,7 +130,7 @@ class AdminServiceTest {
 	@DisplayName("Should update user")
 	void update() {
 
-		when(userRepository.findUserById(1)).thenReturn(Optional.of(user));
+		when(userRepository.findUserById(1)).thenReturn(user);
 
 		user.setUsername("changedusername");
 		adminService.update(user);

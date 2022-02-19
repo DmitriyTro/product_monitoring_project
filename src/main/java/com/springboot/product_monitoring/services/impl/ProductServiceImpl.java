@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -41,29 +42,29 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ProductDTO findProductById(int id) {
-		Product result = productRepository.findById(id).orElse(null);
+		Optional<Product> result = productRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method findProductById - no product found by id: {}", id);
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND.getDescription(), id));
 		}
 
 		log.info("IN method findProductById - product found by id: {}", id);
-		return productMapper.toProductDTO(result);
+		return productMapper.toProductDTO(result.get());
 	}
 
 	@Override
 	public ProductDTO findByProductName(String productName) {
-		Product result = productRepository.findByProductName(productName).orElse(null);
+		Optional<Product> result = productRepository.findByProductName(productName);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method findByProductName - no product found by product name: {}", productName);
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_PRODUCT_NAME_NOT_FOUND
 					.getDescription(), productName));
 		}
 
 		log.info("IN method findByProductName - product: {} found by product name: {}", result, productName);
-		return productMapper.toProductDTO(result);
+		return productMapper.toProductDTO(result.get());
 	}
 
 	@Override
@@ -82,9 +83,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public MessageResponse deleteById(int id) {
-		Product result = productRepository.findById(id).orElse(null);
+		Optional<Product> result = productRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method deleteById - no product found by id: {}", id);
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND.getDescription(), id));
 		}

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,20 +33,20 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryDTO findCategoryById(int id) {
-		Category result = categoryRepository.findById(id).orElse(null);
+		Optional<Category> result = categoryRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method findCategoryById - no category found by id: {}", id);
 			throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_ID_NOT_FOUND.getDescription(), id));
 		}
 
 		log.info("IN method findCategoryById - category found by id: {}", id);
-		return categoryMapper.toCategoryDTO(result);
+		return categoryMapper.toCategoryDTO(result.get());
 	}
 
 	@Override
 	public CategoryDTO findByCategoryName(String categoryName) {
-		Category result = categoryRepository.findByCategoryName(categoryName).orElse(null);
+		Category result = categoryRepository.findByCategoryName(categoryName);
 
 		if (result == null) {
 			log.warn("IN method findByCategoryName - no category found by category name: {}", categoryName);
@@ -73,9 +74,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public MessageResponse deleteById(int id) {
-		Category result = categoryRepository.findById(id).orElse(null);
+		Optional<Category> result = categoryRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method deleteById - no category found by id: {}", id);
 			throw new CategoryException(String.format(CategoryErrorType.CATEGORY_BY_ID_NOT_FOUND.getDescription(), id));
 		}

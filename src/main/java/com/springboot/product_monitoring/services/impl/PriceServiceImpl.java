@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -54,15 +55,15 @@ public class PriceServiceImpl implements PriceService {
 
 	@Override
 	public PriceDTO findPriceById(int id) {
-		Price result = priceRepository.findById(id).orElse(null);
+		Optional<Price> result = priceRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method findPriceById - no price found by id: {}", id);
 			throw new PriceException(String.format(PriceErrorType.PRICE_BY_ID_NOT_FOUND.getDescription(), id));
 		}
 
 		log.info("IN method findPriceById - price found by id: {}", id);
-		return priceMapper.toPriceDTO(result);
+		return priceMapper.toPriceDTO(result.get());
 	}
 
 	@Override
@@ -81,9 +82,9 @@ public class PriceServiceImpl implements PriceService {
 
 	@Override
 	public MessageResponse deleteById(int id) {
-		Price result = priceRepository.findById(id).orElse(null);
+		Optional<Price> result = priceRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method deleteById - no price found by id: {}", id);
 			throw new PriceException(String.format(PriceErrorType.PRICE_BY_ID_NOT_FOUND.getDescription(), id));
 		}
@@ -95,18 +96,18 @@ public class PriceServiceImpl implements PriceService {
 
 	@Override
 	public PriceDTO savePriceWithProductNameAndStoreName(Price price) {
-		Product product = productRepository.findById(price.getProduct().getId()).orElse(null);
+		Optional<Product> product = productRepository.findById(price.getProduct().getId());
 
-		if (product == null) {
+		if (product.isEmpty()) {
 			log.warn("IN method savePriceWithProductIdAndStoreId - no product found by id: {}",
 					price.getProduct().getId());
 			throw new ProductException(String.format(ProductErrorType.PRODUCT_BY_ID_NOT_FOUND
 					.getDescription(), price.getProduct().getId()));
 		}
 
-		Store store = storeRepository.findById(price.getStore().getId()).orElse(null);
+		Optional<Store> store = storeRepository.findById(price.getStore().getId());
 
-		if (store == null) {
+		if (store.isEmpty()) {
 			log.warn("IN method savePriceWithProductIdAndStoreId - no store found by id: {}",
 					price.getStore().getId());
 			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND
@@ -118,11 +119,11 @@ public class PriceServiceImpl implements PriceService {
 
 		priceInDB.setDate(timestampNow);
 		priceInDB.setUnitPrice(price.getUnitPrice());
-		priceInDB.setProduct(product);
-		priceInDB.setStore(store);
+		priceInDB.setProduct(product.get());
+		priceInDB.setStore(store.get());
 
 		log.info("IN method savePrice - price with product by id: {} and store by id: {} saved successfully",
-				product.getId(), store.getId());
+				product.get().getId(), store.get().getId());
 		return priceMapper.toPriceDTO(priceRepository.save(priceInDB));
 	}
 

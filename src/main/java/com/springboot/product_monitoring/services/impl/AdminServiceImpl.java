@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public UserDTO findUserById(int id) {
-		User result = userRepository.findById(id).orElse(null);
+		User result = userRepository.findUserById(id);
 
 		if (result == null) {
 			log.warn("IN method findUserById - no user found by id: {}", id);
@@ -59,16 +60,16 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public UserDTO findUserByUsername(String username) {
-		User result = userRepository.findByUsername(username).orElse(null);
+		Optional<User> result = userRepository.findByUsername(username);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method findUserByUsername - no user found by user name: {}", username);
 			throw new UserException(String.format(UserErrorType.USER_BY_USERNAME_NOT_FOUND
 					.getDescription(), username));
 		}
 
 		log.info("IN method findByStoreName - user: {} found by user name: {}", result, username);
-		return userMapper.toUserDTO(result);
+		return userMapper.toUserDTO(result.get());
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public UserDTO update(User user) {
-		User userInDB = userRepository.findUserById(user.getId()).orElse(null);
+		User userInDB = userRepository.findUserById(user.getId());
 
 		if (userInDB == null) {
 			log.warn("IN method update - no user found by user name: {}", user.getUsername());
@@ -115,9 +116,9 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public MessageResponse deleteById(int id) {
-		User result = userRepository.findById(id).orElse(null);
+		Optional<User> result = userRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method deleteById - no user found by id: {}", id);
 			throw new UserException(String.format(UserErrorType.USER_BY_ID_NOT_FOUND.getDescription(), id));
 		}

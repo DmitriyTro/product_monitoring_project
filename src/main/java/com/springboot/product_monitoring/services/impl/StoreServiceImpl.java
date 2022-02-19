@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,20 +33,20 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public StoreDTO findStoreById(int id) {
-		Store result = storeRepository.findById(id).orElse(null);
+		Optional<Store> result = storeRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method findStoreById - no store found by id: {}", id);
 			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND.getDescription(), id));
 		}
 
 		log.info("IN method findStoreById - store found by id: {}", id);
-		return storeMapper.toStoreDTO(result);
+		return storeMapper.toStoreDTO(result.get());
 	}
 
 	@Override
 	public StoreDTO findByStoreName(String storeName) {
-		Store result = storeRepository.findByStoreName(storeName).orElse(null);
+		Store result = storeRepository.findByStoreName(storeName);
 
 		if (result == null) {
 			log.warn("IN method findByStoreName - no store found by store name: {}", storeName);
@@ -73,9 +74,9 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public MessageResponse deleteById(int id) {
-		Store result = storeRepository.findById(id).orElse(null);
+		Optional<Store> result = storeRepository.findById(id);
 
-		if (result == null) {
+		if (result.isEmpty()) {
 			log.warn("IN method deleteById - no store found by id: {}", id);
 			throw new StoreException(String.format(StoreErrorType.STORE_BY_ID_NOT_FOUND.getDescription(), id));
 		}
